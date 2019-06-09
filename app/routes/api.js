@@ -17,7 +17,7 @@ router.prefix('/api')
 // 接口链接：http://localhost:3000/api/
 // 功能说明： 用于第一次接口接入，验证签名
 router.get('/', function (ctx, next) {
-    ctx.body = returnJson(200,'Hello Wolrd!,您已成功访问InsunAPIServer！',{})
+    ctx.body = 'Hello Wolrd!,您已成功访问InsunAPIServer！'
 })
 router.post('/App.User.Register',User.App_User_Register);
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);

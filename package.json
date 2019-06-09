@@ -27,7 +27,8 @@
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
     "node-uuid": "^1.4.8",
-    "sequelize": "^5.8.7"
+    "sequelize": "^5.8.7",
+    "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"
