@@ -1,20 +1,11 @@
 const router = require('koa-router')()
+const config = require('./../config')
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello InsunAPIServer'
-  })
 
+// 
+// 
+// 这里考虑提供Admin
+router.get('/', function (ctx, next) {
+    ctx.body = returnJson(0,'Hello Wolrd!',{})
 })
-
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
-})
-
-router.get('/json', async (ctx, next) => {
-  ctx.body = {
-    title: 'koa2 json'
-  }
-})
-
 module.exports = router
