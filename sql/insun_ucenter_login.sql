@@ -1,15 +1,6 @@
 /*
+已经完成,用户登录信息表
 Navicat MySQL Data Transfer
-
-Source Server         : insunserver
-Source Server Version : 50717
-Source Host           : localhost:3306
-Source Database       : insunapisvr
-
-Target Server Type    : MYSQL
-Target Server Version : 50717
-File Encoding         : 65001
-
 Date: 2019-06-10 21:25:32
 */
 
