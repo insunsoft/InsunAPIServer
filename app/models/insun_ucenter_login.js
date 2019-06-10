@@ -62,6 +62,8 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '1'
     }
   }, {
+    freezeTableName: true,
+    timestamps: false,
     tableName: 'insun_ucenter_login'
   });
 };
