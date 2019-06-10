@@ -19,12 +19,13 @@ router.prefix('/api')
 router.get('/', function (ctx, next) {
     ctx.body = 'Hello Wolrd!,您已成功访问InsunAPIServer！'
 })
-router.post('/App.User.Register',User.App_User_Register);
+router.post('/App.DBConn.Status',User.App_DBConn_Status);
+/* router.post('/App.User.Register',User.App_User_Register);
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
 router.post('/App.User.Login',User.App_User_Login);
 router.post('/App.User.Logout',User.App_User_Logout);
 router.post('/App.User.Profile',User.App_User_Profile);
-router.post('/App.User.SetStatus',User.App_User_SetStatus);
+router.post('/App.User.SetStatus',User.App_User_SetStatus); */
 //
 module.exports = router
 

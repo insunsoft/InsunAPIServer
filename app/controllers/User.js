@@ -19,11 +19,11 @@
 // +----------------------------------------------------------------------
 const config = require('../config')//配置文件加载
 const InsunFUN = require('../../util/InsunFUN')
-const userModel = require('../models/UserModel');
+//const UserLoginModel = require('../models/UserModel.js');
 const Sequelize = require('sequelize')
 const bodyparser = require('koa-bodyparser')
 const Op = Sequelize.Op;
-
+const DBConn= require('../config/DBConn')//配置文件加载
 // +----------------------------------------------------------------------
 // | 名称: App_User_Register
 // +----------------------------------------------------------------------
@@ -45,42 +45,52 @@ const Op = Sequelize.Op;
 // +----------------------------------------------------------------------
 // | 备注：已完成
 // +----------------------------------------------------------------------
+exports.App_DBConn_Status = async (ctx, next) => {
+    DBConn.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+}
 
+/* 
 
 exports.App_User_Register = async (ctx, next) => {
     try {
         var queryInfo = ctx.request.query
         //获得传入参数
         if (!queryInfo.username || !queryInfo.mobile) {
-            ctx.body = InsunFUN.returnJson(400, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
+            ctx.body = InsunFUN.returnJson(1, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
             return false
         };
-        let result = await userModel.count({ where: { mobile: queryInfo.mobile } })
+        let result = await UserLoginModel.count({ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
         //多条件用or方式 { where: { [Op.or]: [{ username: queryInfo.username }, { mobile: queryInfo.mobile }] }
         if (result > 0) {
             //有记录
-            ctx.body = InsunFUN.returnJson(400, '该手机号码已经被注册。请更换后重新注册。', queryInfo)
+            ctx.body = InsunFUN.returnJson(1, '该手机号码已经被注册。请更换后重新注册。', queryInfo)
             return false
         } else {
             //没有记录
             //在数组对象中产生一些数据，用于新增用户的准备.
             //注册的时候就生成一个token，防止用户注册后退出程序。
-            queryInfo.push_token = InsunFUN.getToken(queryInfo.username, config.security.secret)
+            queryInfo.push_token = InsunFUN.getToken(queryInfo.mobile, config.security.secret)
             //生成唯一ID
             queryInfo.uuid = InsunFUN.generateUUID();
             //明文密码予以加密
             queryInfo.password = InsunFUN.aesEncrypt(queryInfo.password, config.security.secret)
             //根据系统设置默认图像，用于前端显示
             queryInfo.avatar = config.security.avatar;
-            queryInfo.nickname = InsunFUN.generateNameEN(0) + InsunFUN.generateNumPadding(InsunFUN.RandomNum(1, 10000), 7);
+            
             try {
                 //模块创建一个用户
-                let newUser = await userModel.create(queryInfo)
-                ctx.body = InsunFUN.returnJson(0, `成功注册为【${config.appinfo.app_name_zh}】用户！`, JSON.stringify(newUser));
+                let newUser = await UserLoginModel.create(queryInfo)
+                ctx.body = InsunFUN.returnJson(0, `您已成功注册为【${config.appinfo.app_name_zh}】用户！`, JSON.stringify(newUser));
             } catch (err) {
                 //数据保存错误
-                ctx.body = InsunFUN.returnJson(500, '数据保存错误,操作失败!', err.toString());
+                ctx.body = InsunFUN.returnJson(1, '数据保存错误,操作失败!', err.toString());
                 throw new Error(err);
             }
         }
@@ -131,7 +141,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(400, '密码参数提供不全,,请重新输入!', queryInfo)
             return false
         };
-        let result = await userModel.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await UserLoginModel.findOne({ where: { uuid: queryInfo.uuid } })
         if (!result) {
             ctx.body = InsunFUN.returnJson(400, '系统无此用户', queryInfo)
             return false
@@ -144,7 +154,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
                 //更新数据库的加密密码
                 var NewDBPassword = InsunFUN.aesEncrypt(queryInfo.new_password, config.security.secret)
                 var pram = { 'password': NewDBPassword };
-                userModel.update(pram, { 'where': { 'uuid': queryInfo.uuid } })
+                UserLoginModel.update(pram, { 'where': { 'uuid': queryInfo.uuid } })
                 ctx.body = InsunFUN.returnJson(0, '更新密码成功', {});
             } else {
                 ctx.body = InsunFUN.returnJson(400, '原有密码比对错误，请重新输入', {});
@@ -179,7 +189,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
 // | 备注：
 // +----------------------------------------------------------------------
 
-exports.App_User_Login = async (ctx, next) => {
+exports.App_User_Login= async (ctx, next) => {
     try {
         var queryInfo = ctx.request.query
         //获得传入参数
@@ -188,7 +198,7 @@ exports.App_User_Login = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(400, '用户登录信息提供不全', queryInfo)
             return false
         };
-        let result = await userModel.findOne({ where: { username: queryInfo.username } })
+        let result = await UserLoginModel.findOne({ where: { username: queryInfo.username } })
         if (!result) {
             ctx.body = InsunFUN.returnJson(400, '系统无此用户', queryInfo)
             return false
@@ -202,7 +212,7 @@ exports.App_User_Login = async (ctx, next) => {
                 console.log('显示=>Token：' + tmpToken);
                 var pram = { 'push_token': tmpToken };
                 //更新
-                userModel.update(pram, { 'where': { 'uuid': result.uuid } })
+                UserLoginModel.update(pram, { 'where': { 'uuid': result.uuid } })
                 var rtnInfo = {}
                 rtnInfo.uuid = result.uuid
                 rtnInfo.token = tmpToken;
@@ -251,7 +261,7 @@ exports.App_User_Logout = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(400, '用户登录信息提供不全', queryInfo)
             return false
         };
-        let result = await userModel.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await UserLoginModel.findOne({ where: { uuid: queryInfo.uuid } })
         console.log('显示=>返回用户结果：' + JSON.stringify(result));
         if (!result) {
             ctx.body = InsunFUN.returnJson(400, '用户未注册', queryInfo)
@@ -260,7 +270,7 @@ exports.App_User_Logout = async (ctx, next) => {
         } else {
             var pram = { 'push_token': null };
             //更新
-            userModel.update(pram, { 'where': { 'uuid': result.uuid } })
+            UserLoginModel.update(pram, { 'where': { 'uuid': result.uuid } })
             ctx.body = InsunFUN.returnJson(0, '退出系统成功');
         }
     } catch (e) {
@@ -302,7 +312,7 @@ exports.App_User_Profile = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(400, '安全参数提供不全,操作失败', queryInfo)
             return false
         };
-        let result = await userModel.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await UserLoginModel.findOne({ where: { uuid: queryInfo.uuid } })
         if (!result) {
             ctx.body = InsunFUN.returnJson(400, '未找到该用户，请重新查找', queryInfo)
             return false
@@ -349,7 +359,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(400, '参数提供不全,操作失败', queryInfo)
             return false
         };
-        let result = await userModel.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await UserLoginModel.findOne({ where: { uuid: queryInfo.uuid } })
         if (!result) {
             ctx.body = InsunFUN.returnJson(400, '未找到该用户，请重新查找', queryInfo)
             return false
@@ -360,14 +370,14 @@ exports.App_User_SetStatus = async (ctx, next) => {
             }
             var pram = { 'status': status };
             //更新
-            userModel.update(pram, { 'where': { 'uuid': result.uuid } })
+            UserLoginModel.update(pram, { 'where': { 'uuid': result.uuid } })
             ctx.body = InsunFUN.returnJson(0, '设置用户状态成功');
         }
     } catch (e) {
         ctx.body = InsunFUN.returnJson(-1, '访问应用数据错误', e.toString())
     }
 }
-
+ */
 //App.User.GetList111111111111
 
 
@@ -390,7 +400,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
 
 // /*
 // // login
-// exports.USER_LOGIN_API = async(ctx,next)=>{
+// exports.UserLoginModel_API = async(ctx,next)=>{
 //     let Info = ctx.request.query
 //     console.log(Info)
 //     if (!Info.user||!Info.password) {
@@ -403,7 +413,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
 //     let userIp = ctx.request.ip.match(/\d+.\d+.\d+.\d+/)[0]
 //     let logInfo = returnLog(Info.user,userIp,"登录系统")
 //     try {
-//         await UserModel.find(userObj).exec()
+//         await UserLoginModel.find(userObj).exec()
 //             .then((data) => {
 //                 if (data.length == 1) {
 //                     if(data[0].password==Info.password){
@@ -416,7 +426,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
 //                             expiresIn: '12h' //过期时间设置为60妙。那么decode这个token的时候得到的过期时间为 : 创建token的时间 +　设置的值
 //                         });
 //                         userObj.password = Info.password
-//                         UserModel.findOneAndUpdate(userObj,{token: token}).exec()
+//                         UserLoginModel.findOneAndUpdate(userObj,{token: token}).exec()
 //                         ctx.body = returnJson(1,'登录成功',token)
 //                     } else{
 //                         ctx.body = returnJson(2,'密码错误')
@@ -468,7 +478,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
 //         return
 //     }
 //     try {
-//         await UserModel.findByIdAndRemove(getParams.id).exec()
+//         await UserLoginModel.findByIdAndRemove(getParams.id).exec()
 //             .then((data) => {
 //                 ctx.body = returnJson(1,'删除成功')
 //             })
@@ -535,7 +545,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
 //     let userObj = new Object()
 //     userObj.remark = getParams.remark
 //     try {
-//         await UserModel.findByIdAndUpdate(getParams.id,userObj).exec()
+//         await UserLoginModel.findByIdAndUpdate(getParams.id,userObj).exec()
 //             .then((data) => {
 //                 ctx.body = returnJson(1,'修改备注成功')
 //             })
@@ -571,8 +581,8 @@ exports.App_User_SetStatus = async (ctx, next) => {
 //     if (info.remark) {
 //         searchInfo.remark = info.remark
 //     }
-//     let length = await UserModel.find(searchInfo).count()
-//     let data = await UserModel.find(searchInfo).limit(count).skip(skipNum).sort(sortWay).exec()
+//     let length = await UserLoginModel.find(searchInfo).count()
+//     let data = await UserLoginModel.find(searchInfo).limit(count).skip(skipNum).sort(sortWay).exec()
 //     return {
 //         length: length,
 //         data: data

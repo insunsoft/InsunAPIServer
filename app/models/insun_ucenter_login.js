@@ -1,79 +1,75 @@
 /* jshint indent: 2 */
-
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('User_Login', {
+const db = require('../config/DBConn')
+const sequelize  = db.sequelize
+var Sequelize = require('sequelize')
+ 
+let  User_login =  sequelize.define('insun_ucenter_login', {
     id: {
-      type: DataTypes.INTEGER(11).UNSIGNED,
+      type: Sequelize.INTEGER(11).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
     loginname: {
-      type: DataTypes.STRING(50),
+      type: Sequelize.STRING(50),
       allowNull: true,
-      validate: {
-        isNumeric: true,
-        notNull: true
-      },
       comment: '登录名称-限制使用手机号码登录,只允许数字'
     },
     password: {
-      type: DataTypes.STRING(128),
+      type: Sequelize.STRING(128),
       allowNull: true,
-      validate: {
-        isAlphanumeric: true
-      },
+
       comment: '登录密码-加密之后存储,只允许字母和数字'     
     },
     uuid: {
-      type: DataTypes.STRING(128),
+      type: Sequelize.STRING(128),
       allowNull: true,
       comment: 'UUID-唯一编码'    
     },
     push_token: {
-      type: DataTypes.STRING(200),
+      type: Sequelize.STRING(200),
       allowNull: true,
       comment: 'token-授权'  
     },
     avatar: {
-      type: DataTypes.STRING(200),
+      type: Sequelize.STRING(200),
       allowNull: true,
       comment: '用户图像-相对或绝对路径'  
     },
     source: {
-      type: DataTypes.INTEGER(2).UNSIGNED,
+      type: Sequelize.INTEGER(2).UNSIGNED,
       allowNull: true,
       defaultValue: '2',
       comment: '用户注册来源(0->iPhone, 1->iPad, 2->Android, 3->微信, 4->H5, 5->网站)'  
     },
     social_source: {
-      type: DataTypes.INTEGER(2).UNSIGNED,
+      type: Sequelize.INTEGER(2).UNSIGNED,
       allowNull: true,
       defaultValue: '0',
       comment: '第三方登录来源(0->手机, 1->微信, 2->QQ)'  
     },
     social_uid: {
-      type: DataTypes.STRING(256),
+      type: Sequelize.STRING(256),
       allowNull: true,
       comment: '第三方登陆用户 ID'  
     },
     social_token: {
-      type: DataTypes.STRING(256),
+      type: Sequelize.STRING(256),
       allowNull: true,
       comment: '第三方登陆用户的令牌'  
     },
     created_at: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: true,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
     updated_at: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: true,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
     status: {
-      type: DataTypes.INTEGER(1).UNSIGNED,
+      type: Sequelize.INTEGER(1).UNSIGNED,
       allowNull: true,
       defaultValue: '1',
       comment: '状态(0-失效 1-正常)'  
@@ -83,8 +79,8 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     tableName: 'insun_ucenter_login'
   });
-};
 
+module.exports = User_login;
 /* 
 validate: {
   is: ["^[a-z]+$",'i'],     // 只允许字母
