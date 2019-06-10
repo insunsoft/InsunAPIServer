@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2019-06-10 20:36:53
+Date: 2019-06-10 21:25:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -34,9 +34,9 @@ CREATE TABLE `insun_ucenter_login` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(1) unsigned DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`loginname`),
-  UNIQUE KEY `uuid` (`uuid`),
-  UNIQUE KEY `social_uid` (`social_uid`,`social_source`)
+  UNIQUE KEY `social_uid` (`social_uid`,`social_source`),
+  UNIQUE KEY `base` (`id`,`loginname`,`password`,`avatar`,`status`) USING BTREE,
+  UNIQUE KEY `uuid` (`uuid`,`push_token`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
