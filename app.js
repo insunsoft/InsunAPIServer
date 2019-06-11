@@ -42,7 +42,7 @@ const api = require('./server/routes/api')
 //const port = process.env.PORT || config.server.API_server_port
 // +-----------------------环境设置--------------------------------------
 const InsunFUN = require('./util/InsunFUN')
-
+const host1 = process.env.NODE_ENV || ''
 // +-----------------------中间件使用--------------------------------------
 // 错误处理
 onerror(app)
@@ -61,7 +61,9 @@ app.use(async (ctx, next) => {
   await next()
   const ms = new Date() - start
   console.log(`【模式：${ctx.method}】路径- ${ctx.url} 用时- ${ms}ms`)
-
+var sss=process.env.NODE_ENV
+var ccc=sss.substring(1, sss.length()-1)
+  console.log(`【模式：${sss}】${ccc}`)
 
   
 
@@ -80,7 +82,7 @@ app.on('error', (err, ctx) => {
   console.error('服务器端错误==>', err, ctx)
 });
 
-app.listen(3000)
+app.listen(3001)
 
 // +----------------------------------------------------------------------
 //console.log('InsunAPIServer 运行于 ' + config.server.API_server_port + '端口...')

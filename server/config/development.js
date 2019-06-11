@@ -10,4 +10,4 @@ module.exports = {
     HOST: 'localhost',//
     prefix: 'insun_'//
 }
-};
+};  
