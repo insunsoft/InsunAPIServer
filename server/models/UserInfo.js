@@ -91,5 +91,11 @@ module.exports = function (sequelize, DataTypes) {
     timestamps: false,
       tableName: 'insun_ucenter_userinfo'
     });
+
+/* 
+    UserInfo.associate = function(models) {
+      // Coffee belongsTo UserLogin
+      UserInfo.belongsTo(models.UserLogin, { foreignKey: 'user_id' });
+    }; */
     return  UserInfo;
 };

@@ -45,13 +45,17 @@ exports.App_DBConn_Status = async (ctx, next) => {
     console.log(`服务器端【${process.env.NODE_ENV}】==>开始测试数据库连接.....`);
      await DBConn.sequelize.authenticate()
         .then(() => {
-            ctx.body = InsunFUN.returnJson(1, '已成功建立连接。')
-            console.log(`服务器端【${process.env.NODE_ENV}】==>已成功建立连接。`);
+            let DBInfo= {}
+            DBInfo.message='运行环境==>' + process.env.NODE_ENV
+            DBInfo.database='数据库名称==>'+DBConn.database
+            DBInfo.host='主机名称==>'+DBConn.host
+            ctx.body = InsunFUN.returnJson(1, '已成功建立连接。',DBInfo)
+            //console.log(`服务器端【${process.env.NODE_ENV}】==>已成功建立连接。`);
             
         })
         .catch(err => {
             ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err)
-            console.error(`服务器端【${process.env.NODE_ENV}】==>无法连接到数据库。${err}`);
+            //console.error(`服务器端【${process.env.NODE_ENV}】==>无法连接到数据库。${err}`);
         });
 } 
 
@@ -63,9 +67,7 @@ exports.App_User_Info = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(1, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
             return
         };
-        //UserInfoModel.belongsTo(UserLoginModel)
-        //UserLoginModel.hasMany(UserInfoModel)
-        //UserLoginModel.hasMany(UserInfoModel, { as: 'UserInfo' })
+
         let result = await DBConn.UserLogin.findOne({ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
         //多条件用or方式 { where: { [Op.or]: [{ username: queryInfo.username }, { mobile: queryInfo.mobile }] }
@@ -74,12 +76,20 @@ exports.App_User_Info = async (ctx, next) => {
             ctx.body = InsunFUN.returnJson(1, '数据库中未找到该用户信息。', queryInfo)
             return
         } else {
-           // let subset = UserInfoModel.findOne({ where: { user_id: result.get('id') } })
-           
-            //ssss ['subdata']=JSON.stringify(subset)
-         
+            let subset = await DBConn.UserInfo.findOne({ where: { user_id: result.get('id') } })
+            let sss ={}
+            console.log(`显示1base==>【${JSON.stringify(subset)}`)
+            sss=result
+            console.log(`显示2login==>【${JSON.stringify(sss)}`)
+            
+            sss['subdata']=JSON.stringify(subset)
+            //sss.subdata.push(subset)
+            //JSON.stringify(subset)
+            console.log(`显示3加工后本体==>【${JSON.stringify(sss)}`)
+            console.log(`显示4加工后子集==>【${sss.subdata}`)
             //console.log(`显示==>【${JSON.stringify(subset)}`)
-            ctx.body = InsunFUN.returnJson(0, '查询成功。', result)
+           // ctx.body = InsunFUN.returnJson(0, JSON.stringify(DBConn.UserLogin.baseinfo), result)
+            ctx.body = InsunFUN.returnJson(0, '查询成功。', sss + sss.subdata)
         }
     } catch (e) {
         ctx.body = InsunFUN.returnJson(-1, '访问应用数据错误，请联系开发人员。', e.toString())

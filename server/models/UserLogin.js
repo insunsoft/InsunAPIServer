@@ -79,6 +79,33 @@ module.exports = function (sequelize, DataTypes) {
       timestamps: false,
       tableName: 'insun_ucenter_login'
     });
+
+   /*  UserLogin.associate = function(models) {
+      // associations can be defined here
+      UserLogin.belongsTo(models.UserInfo,{
+        foreignKey: 'user_id'
+      })  
+    
+      UserLogin.baseinfo =  UserLogin.hasOne(models.UserInfo, { as: 'audit', foreignKey: 'user_id' })
+    } */
+/*       UserLogin.hasMany(models.orders,{
+        foreignKey: 'user_id'
+      }) */
+      // UserLogin.belongsToMany(models.goods,{
+      //   // as:'',
+      //   foreignKey:'user_id',
+      //   through: {
+      //     model: models.carts
+      //   }
+      
+      // UserLogin.belongsTo(models.carts,{
+       
+      //   foreignKey:'user_id',
+       
+      // })
+    //};
+
+
     return UserLogin ;
   }
 /*
