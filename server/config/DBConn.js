@@ -9,7 +9,7 @@ const config = require('.')//配置文件加载
  * 第三个参数 password  数据库密码
  */
 
-const DBConn = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
+const DB = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
     host: config.database.HOST,
     port: config.database.PORT,
     dialect: config.server.db_type,
@@ -26,5 +26,14 @@ const DBConn = new Sequelize(config.database.DATABASE,config.database.USERNAME, 
     },
     timezone: '+08:00' //东八时区
 });
+let gethost=function(){
+    return config.database.HOST
+}
 
-module.exports = DBConn;
+DBConn = async (ctx, next) => {
+    return DB
+}
+DBHost = async (ctx, next) => {
+    return config.database.HOST
+}
+module.exports = {DBConn,DBHost};

@@ -23,7 +23,7 @@ const InsunFUN = require('../../util/InsunFUN')
 const Sequelize = require('sequelize')
 const bodyparser = require('koa-bodyparser')
 const Op = Sequelize.Op;
-const DBConn= require('../config/DBConn')//配置文件加载
+import {DBConn,DBConnHost}  from ('../config/DBConn')//配置文件加载
 // +----------------------------------------------------------------------
 // | 名称: App_User_Register
 // +----------------------------------------------------------------------
@@ -46,15 +46,18 @@ const DBConn= require('../config/DBConn')//配置文件加载
 // | 备注：已完成
 // +----------------------------------------------------------------------
 exports.App_DBConn_Status = async (ctx, next) => {
-    DBConn.authenticate()
+    console.log('开始测试数据库连接......');
+    await  DBConn.authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    ctx.body = InsunFUN.returnJson(1, '已成功建立连接。',DBConn.DBConnHost() )
+    console.log('已成功建立连接。');
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err )
+    console.error('无法连接到数据库:', err);
   });
 }
-
+//.close()
 /* 
 
 exports.App_User_Register = async (ctx, next) => {
