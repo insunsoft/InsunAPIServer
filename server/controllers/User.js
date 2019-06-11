@@ -21,9 +21,9 @@ const config = require('../config')//配置文件加载
 const InsunFUN = require('../../util/InsunFUN')
 //const UserLoginModel = require('../models/UserModel.js');
 const Sequelize = require('sequelize')
-const bodyparser = require('koa-bodyparser')
 const Op = Sequelize.Op;
-import {DBConn,DBConnHost}  from ('../config/DBConn')//配置文件加载
+const DBConn = require('../config/DBConn')
+//import {DBConn,DBConnHost}  from ()//配置文件加载
 // +----------------------------------------------------------------------
 // | 名称: App_User_Register
 // +----------------------------------------------------------------------

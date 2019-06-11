@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const config = require('.')//配置文件加载
+const config = require('./Server')//配置文件加载
 /**
  *
  * 配置数据库
@@ -9,7 +9,7 @@ const config = require('.')//配置文件加载
  * 第三个参数 password  数据库密码
  */
 
-const DB = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
+/* const DB = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
     host: config.database.HOST,
     port: config.database.PORT,
     dialect: config.server.db_type,
@@ -25,15 +25,6 @@ const DB = new Sequelize(config.database.DATABASE,config.database.USERNAME, conf
         idle: 10000
     },
     timezone: '+08:00' //东八时区
-});
-let gethost=function(){
-    return config.database.HOST
-}
+}); */
 
-DBConn = async (ctx, next) => {
-    return DB
-}
-DBHost = async (ctx, next) => {
-    return config.database.HOST
-}
-module.exports = {DBConn,DBHost};
+//module.exports = DBConn;

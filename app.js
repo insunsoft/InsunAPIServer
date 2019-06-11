@@ -33,11 +33,11 @@ const views = require('koa-views')//
 const onerror = require('koa-onerror')//错误处理
 const logger = require('koa-logger')//日志
 // +----------------------配置文件加载------------------------------------
-const config = require('./app/config')//配置文件加载
+const config = require('./server/config')//配置文件加载
 // +----------------------路由文件加载------------------------------------
-const index = require('./app/routes/index')
-const users = require('./app/routes/users')
-const api = require('./app/routes/api')
+const index = require('./server/routes/index')
+const users = require('./server/routes/users')
+const api = require('./server/routes/api')
 // +-----------------------环境设置--------------------------------------
 const host = process.env.HOST || config.server.API_server_host
 const port = process.env.PORT || config.server.API_server_port
