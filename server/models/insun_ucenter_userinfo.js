@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+const sequelize =require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('insun_ucenter_userinfo', {
     id: {
@@ -87,6 +87,8 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '1'
     }
   }, {
+    freezeTableName: true,
+    timestamps: false,
       tableName: 'insun_ucenter_userinfo'
     });
 };

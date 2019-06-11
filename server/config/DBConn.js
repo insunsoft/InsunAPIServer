@@ -9,7 +9,7 @@ const config = require('./')//配置文件加载
  * 第三个参数 password  数据库密码
  */
 
- const DBConn = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
+ const sequelize = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
     host: config.database.HOST,
     port: config.database.PORT,
     dialect: config.server.db_type,
@@ -27,4 +27,4 @@ const config = require('./')//配置文件加载
     timezone: '+08:00' //东八时区
 }); 
 
-module.exports = DBConn;
+module.exports = {sequelize};

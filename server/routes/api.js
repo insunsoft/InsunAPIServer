@@ -21,8 +21,8 @@ router.get('/', function (ctx, next) {
 })
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
 router.get('/App.DBConn.Status',User.App_DBConn_Status);
-router.post('/App.DBConn.Select',User.App_User_Select);
-router.get('/App.DBConn.Select',User.App_User_Select);
+router.post('/App.User.Info',User.App_User_Info);
+router.get('/App.User.Info',User.App_User_Info);
 /* router.post('/App.User.Register',User.App_User_Register);
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
 router.post('/App.User.Login',User.App_User_Login);

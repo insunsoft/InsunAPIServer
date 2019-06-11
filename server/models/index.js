@@ -1,14 +1,12 @@
-/*
-let requireDirectory = require('require-directory')
-module.exports = requireDirectory(module)
-*/
 
-// import { db } from '../lib/sequelize'
-const UserLoginModel = require('./insun_ucenter_login') 
-const UserInfoModel = require('./insun_ucenter_userinfo') 
-
-/* import FileUpload from './fileUpload.model'
-import TodoList from './todoList.model'
+const DBConn = require('../config/DBConn')//配置文件加载
+const Sequelize = DBConn.sequelize;
+const UserLoginModel = Sequelize.import('./insun_ucenter_login.js')
+const UserInfoModel = Sequelize.import('./insun_ucenter_userinfo.js')
+module.exports = {
+    UserLoginModel,
+    UserInfoModel
+}
 /**
  * 如果设置belongsTo在hasMany增加外键约束constraints: false是不好用的
  * 如果不设置belongsTo在hasMany增加外键约束constraints: false是好用的
@@ -22,5 +20,3 @@ import TodoList from './todoList.model'
 // }) */
 // 重新创建所有的表结构
 // db.sync({force: true})
-
-module.exports  = {UserLoginModel,UserInfoModel}
