@@ -4,8 +4,8 @@ module.exports = requireDirectory(module)
 */
 
 // import { db } from '../lib/sequelize'
-import UserLoginModel from './insun_ucenter_login.js'
-import UserInfoModel from './insun_ucenter_userinfo.js'
+const UserLoginModel = require('./insun_ucenter_login') 
+const UserInfoModel = require('./insun_ucenter_userinfo') 
 
 /* import FileUpload from './fileUpload.model'
 import TodoList from './todoList.model'
@@ -23,4 +23,4 @@ import TodoList from './todoList.model'
 // 重新创建所有的表结构
 // db.sync({force: true})
 
-export {UserLoginModel,UserInfoModel}
+module.exports  = {UserLoginModel,UserInfoModel}

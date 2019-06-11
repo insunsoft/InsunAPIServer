@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('insun_ucenter_userinfo', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
@@ -87,6 +87,6 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '1'
     }
   }, {
-    tableName: 'insun_ucenter_userinfo'
-  });
+      tableName: 'insun_ucenter_userinfo'
+    });
 };

@@ -1,9 +1,9 @@
 /* jshint indent: 2 */
-const db = require('../config/DBConn')
-const sequelize  = db.sequelize
-var Sequelize = require('sequelize')
- 
-let  User_login =  sequelize.define('insun_ucenter_login', {
+
+
+
+module.exports = function (sequelize, DataTypes) {
+  return Sequelize.define('insun_ucenter_login', {
     id: {
       type: Sequelize.INTEGER(11).UNSIGNED,
       allowNull: false,
@@ -19,44 +19,44 @@ let  User_login =  sequelize.define('insun_ucenter_login', {
       type: Sequelize.STRING(128),
       allowNull: true,
 
-      comment: '登录密码-加密之后存储,只允许字母和数字'     
+      comment: '登录密码-加密之后存储,只允许字母和数字'
     },
     uuid: {
       type: Sequelize.STRING(128),
       allowNull: true,
-      comment: 'UUID-唯一编码'    
+      comment: 'UUID-唯一编码'
     },
     push_token: {
       type: Sequelize.STRING(200),
       allowNull: true,
-      comment: 'token-授权'  
+      comment: 'token-授权'
     },
     avatar: {
       type: Sequelize.STRING(200),
       allowNull: true,
-      comment: '用户图像-相对或绝对路径'  
+      comment: '用户图像-相对或绝对路径'
     },
     source: {
       type: Sequelize.INTEGER(2).UNSIGNED,
       allowNull: true,
       defaultValue: '2',
-      comment: '用户注册来源(0->iPhone, 1->iPad, 2->Android, 3->微信, 4->H5, 5->网站)'  
+      comment: '用户注册来源(0->iPhone, 1->iPad, 2->Android, 3->微信, 4->H5, 5->网站)'
     },
     social_source: {
       type: Sequelize.INTEGER(2).UNSIGNED,
       allowNull: true,
       defaultValue: '0',
-      comment: '第三方登录来源(0->手机, 1->微信, 2->QQ)'  
+      comment: '第三方登录来源(0->手机, 1->微信, 2->QQ)'
     },
     social_uid: {
       type: Sequelize.STRING(256),
       allowNull: true,
-      comment: '第三方登陆用户 ID'  
+      comment: '第三方登陆用户 ID'
     },
     social_token: {
       type: Sequelize.STRING(256),
       allowNull: true,
-      comment: '第三方登陆用户的令牌'  
+      comment: '第三方登陆用户的令牌'
     },
     created_at: {
       type: Sequelize.DATE,
@@ -72,16 +72,16 @@ let  User_login =  sequelize.define('insun_ucenter_login', {
       type: Sequelize.INTEGER(1).UNSIGNED,
       allowNull: true,
       defaultValue: '1',
-      comment: '状态(0-失效 1-正常)'  
+      comment: '状态(0-失效 1-正常)'
     }
   }, {
-    freezeTableName: true,
-    timestamps: false,
-    tableName: 'insun_ucenter_login'
-  });
+      freezeTableName: true,
+      timestamps: false,
+      tableName: 'insun_ucenter_login'
+    });
 
-module.exports = insun_ucenter_login;
-/* 
+  }
+/*
 validate: {
   is: ["^[a-z]+$",'i'],     // 只允许字母
   is: /^[a-z]+$/i,          // 与上一个示例相同,使用了真正的正则表达式

@@ -18,7 +18,7 @@
 // | 备注：已完成
 // +----------------------------------------------------------------------
 //const config = require('../config')//配置文件加载
-//const UserLoginModel = require('../models/UserModel.js');
+const {UserLoginModel,UserInfoModel} = require('../models');
 //const Sequelize = require('sequelize')
 //const Op = Sequelize.Op;
 const DBConn = require('../config/DBConn')
@@ -44,18 +44,62 @@ const InsunFUN = require('../../util/InsunFUN')
 // +----------------------------------------------------------------------
 exports.App_DBConn_Status = async (ctx, next) => {
     console.log(`服务器端【${process.env.NODE_ENV}】==>开始测试数据库连接.....`);
-    await  DBConn.authenticate()
-  .then(() => {
-    ctx.body = InsunFUN.returnJson(1, '已成功建立连接。' )
-    console.log(`服务器端【${process.env.NODE_ENV}】==>已成功建立连接。`);
-  })
-  .catch(err => {
-    ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err )
-    console.error(`服务器端【${process.env.NODE_ENV}】==>无法连接到数据库。${err}` );
-  });
+    await DBConn.authenticate()
+        .then(() => {
+            ctx.body = InsunFUN.returnJson(1, '已成功建立连接。')
+            console.log(`服务器端【${process.env.NODE_ENV}】==>已成功建立连接。`);
+        })
+        .catch(err => {
+            ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err)
+            console.error(`服务器端【${process.env.NODE_ENV}】==>无法连接到数据库。${err}`);
+        });
 }
+
+exports.App_User_Select = async (ctx, next) => {
+    try {
+        var queryInfo = ctx.request.query
+        //获得传入参数
+        if (!queryInfo.username || !queryInfo.mobile) {
+            ctx.body = InsunFUN.returnJson(1, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
+            return false
+        };
+        let result = await UserLoginModel.findOne({ where: { loginname: queryInfo.mobile } })
+        // 返回数据库中是否有用该手机注册的用户
+        //多条件用or方式 { where: { [Op.or]: [{ username: queryInfo.username }, { mobile: queryInfo.mobile }] }
+        if (result > 0) {
+            //有记录
+            ctx.body = InsunFUN.returnJson(1, '该手机号码已经被注册。请更换后重新注册。', queryInfo)
+            return false
+        } else {
+            //没有记录
+            //在数组对象中产生一些数据，用于新增用户的准备.
+            //注册的时候就生成一个token，防止用户注册后退出程序。
+            queryInfo.push_token = InsunFUN.getToken(queryInfo.mobile, config.security.secret)
+            //生成唯一ID
+            queryInfo.uuid = InsunFUN.generateUUID();
+            //明文密码予以加密
+            queryInfo.password = InsunFUN.aesEncrypt(queryInfo.password, config.security.secret)
+            //根据系统设置默认图像，用于前端显示
+            queryInfo.avatar = config.security.avatar;
+
+            try {
+                //模块创建一个用户
+                let newUser = await UserLoginModel.create(queryInfo)
+                ctx.body = InsunFUN.returnJson(0, `您已成功注册为【${config.appinfo.app_name_zh}】用户！`, JSON.stringify(newUser));
+            } catch (err) {
+                //数据保存错误
+                ctx.body = InsunFUN.returnJson(1, '数据保存错误,操作失败!', err.toString());
+                throw new Error(err);
+            }
+        }
+    } catch (e) {
+        ctx.body = InsunFUN.returnJson(-1, '访问应用数据错误，请联系开发人员。', e.toString())
+    }
+}
+
+
 //.close()
-/* 
+/*
 // +----------------------------------------------------------------------
 // | 名称: App_User_Register
 // +----------------------------------------------------------------------
@@ -103,7 +147,7 @@ exports.App_User_Register = async (ctx, next) => {
             queryInfo.password = InsunFUN.aesEncrypt(queryInfo.password, config.security.secret)
             //根据系统设置默认图像，用于前端显示
             queryInfo.avatar = config.security.avatar;
-            
+
             try {
                 //模块创建一个用户
                 let newUser = await UserLoginModel.create(queryInfo)
@@ -200,7 +244,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
 // | 参数：
 //  * @param username	字符串	必须		最小：1；最大：50	用户名
 //  * @param password	字符串	必须		最小：32；最大：32	密码，须md5后传递，保持全部小写
-//  * @param 
+//  * @param
 // +----------------------------------------------------------------------
 // | 返回：  JSON
 // +----------------------------------------------------------------------
