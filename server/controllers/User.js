@@ -18,12 +18,47 @@
 // | 备注：已完成
 // +----------------------------------------------------------------------
 //const config = require('../config')//配置文件加载
-const InsunFUN = require('../../util/InsunFUN')
 //const UserLoginModel = require('../models/UserModel.js');
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op;
+//const Sequelize = require('sequelize')
+//const Op = Sequelize.Op;
 const DBConn = require('../config/DBConn')
-//import {DBConn,DBConnHost}  from ()//配置文件加载
+const InsunFUN = require('../../util/InsunFUN')
+
+// +----------------------------------------------------------------------
+// | 名称: App_DBConn_Status
+// +----------------------------------------------------------------------
+// | 用途: 根据配置文件访问Mysql数据库
+// +----------------------------------------------------------------------
+// | 使用: http://localhost:3000/api/App_DBConn_Status
+// +----------------------------------------------------------------------
+// | 方式：请求方式GET/POST
+// +----------------------------------------------------------------------
+// | 参数：
+//  * @param username 用户姓名
+//  * @param password 登录密码
+//  * @param mobile 手机号码
+//  * @param data 返回数据
+// +----------------------------------------------------------------------
+// | 返回：JSON
+// +----------------------------------------------------------------------
+// | 样例：
+// +----------------------------------------------------------------------
+// | 备注：已完成
+// +----------------------------------------------------------------------
+exports.App_DBConn_Status = async (ctx, next) => {
+    console.log('开始测试数据库连接......');
+    await  DBConn.authenticate()
+  .then(() => {
+    ctx.body = InsunFUN.returnJson(1, '已成功建立连接。' )
+    console.log('已成功建立连接。');
+  })
+  .catch(err => {
+    ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err )
+    console.error('无法连接到数据库:', err);
+  });
+}
+//.close()
+/* 
 // +----------------------------------------------------------------------
 // | 名称: App_User_Register
 // +----------------------------------------------------------------------
@@ -45,21 +80,6 @@ const DBConn = require('../config/DBConn')
 // +----------------------------------------------------------------------
 // | 备注：已完成
 // +----------------------------------------------------------------------
-exports.App_DBConn_Status = async (ctx, next) => {
-    console.log('开始测试数据库连接......');
-    await  DBConn.authenticate()
-  .then(() => {
-    ctx.body = InsunFUN.returnJson(1, '已成功建立连接。',DBConn.DBConnHost() )
-    console.log('已成功建立连接。');
-  })
-  .catch(err => {
-    ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err )
-    console.error('无法连接到数据库:', err);
-  });
-}
-//.close()
-/* 
-
 exports.App_User_Register = async (ctx, next) => {
     try {
         var queryInfo = ctx.request.query

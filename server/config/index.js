@@ -11,68 +11,25 @@
 // +----------------------------------------------------------------------
 // | 路径: \config\index.js
 // +----------------------------------------------------------------------
-// | 使用: const config = require('./config') index.js为默认名称
+// | 使用: const config = require('./server/config') index.js为默认名称
 // +----------------------------------------------------------------------
 // | 样例：config.server.API_server_port 获得设置的端口参数
 // +----------------------------------------------------------------------
-// | 备注：最后更新日期 2019-06-03
+// | 备注：最后更新日期 2019-06-11
 // +----------------------------------------------------------------------
 var path = require('path');
 // 通过NODE_ENV来设置环境变量，如果没有指定则默认为生产环境
 var env = process.env.NODE_ENV || 'production';
 env = env.toLowerCase();
-env =env.substring(1, env.length()-1);
-
-// 载入配置文件
-var file = path.resolve(__dirname,env);
-
-console.log(env);
-console.log(process.env.NODE_ENV);
+// 根据环境变量载入相对应的配置文件
+var file = path.resolve(__dirname,`${env}Config.js`);
 try {
   var config = module.exports = require(file);
   console.log('正在加载config文件: [%s] %s', env, file);
+
 } catch (err) {
   console.error('加载config文件失败: [%s] %s', env, file);
-  throw err;
+   throw err;
 }
 
  
-
-
-
-
-
-
-
-
-
-/* {
-  "development": {
-    "username": "root",
-    "password": null,
-    "database": "WeiAIStore2_development",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "seederStorage": "json",
-    "seederStoragePath": "sequelizeData.json",
-    "seederStorageTableName": "sequelize_data",
-    "timezone":"+08:00"
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "WeiAIStore2_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "timezone":"+08:00"
-  },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "WeiAIStore2_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "timezone":"+08:00"
-  }
-}
-© 2019 GitHub, Inc.*/

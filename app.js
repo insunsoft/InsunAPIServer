@@ -33,16 +33,17 @@ const views = require('koa-views')//
 const onerror = require('koa-onerror')//错误处理
 const logger = require('koa-logger')//日志
 // +----------------------配置文件加载------------------------------------
-//const config = require('./server/config')//配置文件加载
+const config = require('./server/config')//配置文件加载
 // +----------------------路由文件加载------------------------------------
-const index = require('./server/routes/index')
+const index = require('./server/routes/index')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
 // +-----------------------环境设置--------------------------------------
-//const host = process.env.HOST || config.server.API_server_host
-//const port = process.env.PORT || config.server.API_server_port
+const type = process.env.HOST || config.server.API_server_type
+const host = process.env.HOST || config.server.API_server_host
+const port = process.env.PORT || config.server.API_server_port
 // +-----------------------环境设置--------------------------------------
 const InsunFUN = require('./util/InsunFUN')
-const host1 = process.env.NODE_ENV || ''
+
 // +-----------------------中间件使用--------------------------------------
 // 错误处理
 onerror(app)
@@ -61,9 +62,8 @@ app.use(async (ctx, next) => {
   await next()
   const ms = new Date() - start
   console.log(`【模式：${ctx.method}】路径- ${ctx.url} 用时- ${ms}ms`)
-var sss=process.env.NODE_ENV
-var ccc=sss.substring(1, sss.length()-1)
-  console.log(`【模式：${sss}】${ccc}`)
+
+
 
   
 
@@ -82,11 +82,11 @@ app.on('error', (err, ctx) => {
   console.error('服务器端错误==>', err, ctx)
 });
 
-app.listen(3001)
+//app.listen(3000)
 
 // +----------------------------------------------------------------------
-//console.log('InsunAPIServer 运行于 ' + config.server.API_server_port + '端口...')
-//console.log('可访问网址测试==>' + config.server.API_server_type + config.server.API_server_host + ':' + config.server.API_server_port + '/api/')
+console.log('InsunAPIServer 运行于' + port + '端口...')
+console.log('可访问网址测试==>'+ type  + host + ':' + port + '/')
 module.exports = app
 // +----------------------------------------------------------------------
 // 设置数据库链接

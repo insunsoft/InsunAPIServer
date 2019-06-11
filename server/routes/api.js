@@ -20,6 +20,7 @@ router.get('/', function (ctx, next) {
     ctx.body = 'Hello Wolrd!,您已成功访问InsunAPIServer！'
 })
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
+router.get('/App.DBConn.Status',User.App_DBConn_Status);
 /* router.post('/App.User.Register',User.App_User_Register);
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
 router.post('/App.User.Login',User.App_User_Login);
