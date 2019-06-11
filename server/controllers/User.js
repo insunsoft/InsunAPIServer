@@ -17,9 +17,9 @@
 // +----------------------------------------------------------------------
 // | 备注：已完成
 // +----------------------------------------------------------------------
-const DBConn= require('../config/DBConn')//配置文件加载
-const Sequelize =DBConn.sequelize;
-const {UserLoginModel,UserInfoModel} = require('../models');
+const DBConn = require('../config/DBConn')//配置文件加载
+const Sequelize = DBConn.sequelize;
+const { UserLoginModel, UserInfoModel } = require('../models');
 const Op = Sequelize.Op;
 const InsunFUN = require('../../util/InsunFUN')
 
@@ -56,23 +56,33 @@ exports.App_DBConn_Status = async (ctx, next) => {
 
 exports.App_User_Info = async (ctx, next) => {
     try {
-        var queryInfo = ctx.request.query
         //获得传入参数
+        var queryInfo = ctx.request.query
         if (!queryInfo.mobile) {
             ctx.body = InsunFUN.returnJson(1, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
-            return 
+            return
         };
-        let result = await UserLoginModel.findOne({ where: { loginname: queryInfo.mobile } })
+        UserInfoModel.belongsTo(UserLoginModel)
+        //UserLoginModel.hasMany(UserInfoModel)
+        UserLoginModel.hasMany(UserInfoModel, { as: 'UserInfo' })
+        let result = await UserLoginModel.findOne({include: [{
+            model: UserInfoModel,
+            as: 'UserInfo',
+            where: { user_id: result.get('id') } 
+        }]},{ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
         //多条件用or方式 { where: { [Op.or]: [{ username: queryInfo.username }, { mobile: queryInfo.mobile }] }
-        if (!result ) {
+        if (!result) {
             //无记录
             ctx.body = InsunFUN.returnJson(1, '数据库中未找到该用户信息。', queryInfo)
-            return 
+            return
         } else {
-            let subset =  UserInfoModel.findOne({ where: { user_id: result.get('id')} })
-            console.log(`显示==>【${subset}`)
-            ctx.body = InsunFUN.returnJson(0, '查询成功。', JSON.stringify(result))
+            let subset = UserInfoModel.findOne({ where: { user_id: result.get('id') } })
+           
+            //ssss ['subdata']=JSON.stringify(subset)
+         
+            console.log(`显示==>【${JSON.stringify(subset)}`)
+            ctx.body = InsunFUN.returnJson(0, '查询成功。', result)
         }
     } catch (e) {
         ctx.body = InsunFUN.returnJson(-1, '访问应用数据错误，请联系开发人员。', e.toString())
