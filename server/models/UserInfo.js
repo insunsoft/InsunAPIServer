@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
-const sequelize =require('sequelize')
+//const sequelize =require('sequelize')
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('insun_ucenter_userinfo', {
+  const UserInfo =  sequelize.define('UserInfo', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
@@ -91,4 +91,5 @@ module.exports = function (sequelize, DataTypes) {
     timestamps: false,
       tableName: 'insun_ucenter_userinfo'
     });
+    return  UserInfo;
 };
