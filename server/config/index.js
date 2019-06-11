@@ -17,10 +17,21 @@
 // +----------------------------------------------------------------------
 // | 备注：最后更新日期 2019-06-03
 // +----------------------------------------------------------------------
-exports.serverinfo = function() {
-  console.log('my name is cp');
-}
+var path = require('path');
+// 通过NODE_ENV来设置环境变量，如果没有指定则默认为生产环境
+var env = process.env.NODE_ENV || 'production';
+env = env.toLowerCase();
 
+// 载入配置文件
+var file = path.resolve(__dirname,env);
+console.error('加载config文件失败: [%s] %s', env, file);
+try {
+  var config = module.exports = require(file);
+  console.log('正在加载config文件: [%s] %s', env, file);
+} catch (err) {
+  console.error('加载config文件失败: [%s] %s', env, file);
+  throw err;
+}
 
 
 

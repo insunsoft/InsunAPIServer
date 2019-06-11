@@ -33,14 +33,13 @@ const views = require('koa-views')//
 const onerror = require('koa-onerror')//错误处理
 const logger = require('koa-logger')//日志
 // +----------------------配置文件加载------------------------------------
-const config = require('./server/config')//配置文件加载
+//const config = require('./server/config')//配置文件加载
 // +----------------------路由文件加载------------------------------------
 const index = require('./server/routes/index')
-const users = require('./server/routes/users')
 const api = require('./server/routes/api')
 // +-----------------------环境设置--------------------------------------
-const host = process.env.HOST || config.server.API_server_host
-const port = process.env.PORT || config.server.API_server_port
+//const host = process.env.HOST || config.server.API_server_host
+//const port = process.env.PORT || config.server.API_server_port
 // +-----------------------环境设置--------------------------------------
 const InsunFUN = require('./util/InsunFUN')
 
@@ -73,8 +72,6 @@ app.use(async (ctx, next) => {
 // +----------------------路由配置----------------------------------------
 //console.log('InsunAPIServer 正在加载index路由... ')
 app.use(index.routes(), index.allowedMethods())
-//console.log('InsunAPIServer 正在加载users路由... ')
-app.use(users.routes(), users.allowedMethods())
 //console.log('InsunAPIServer 正在加载api路由... ')
 app.use(api.routes(), api.allowedMethods())
 // +----------------------------------------------------------------------
@@ -83,11 +80,11 @@ app.on('error', (err, ctx) => {
   console.error('服务器端错误==>', err, ctx)
 });
 
-app.listen(port, host)
+app.listen(3000)
 
 // +----------------------------------------------------------------------
-console.log('InsunAPIServer 运行于 ' + config.server.API_server_port + '端口...')
-console.log('可访问网址测试==>' + config.server.API_server_type + config.server.API_server_host + ':' + config.server.API_server_port + '/api/')
+//console.log('InsunAPIServer 运行于 ' + config.server.API_server_port + '端口...')
+//console.log('可访问网址测试==>' + config.server.API_server_type + config.server.API_server_host + ':' + config.server.API_server_port + '/api/')
 module.exports = app
 // +----------------------------------------------------------------------
 // 设置数据库链接

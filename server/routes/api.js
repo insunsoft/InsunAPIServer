@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------
 
 const router = require('koa-router')()
-const config = require('./../config')
+//const config = require('./../config')
 const User = require('../controllers/User')
 
 router.prefix('/api')

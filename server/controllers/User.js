@@ -17,7 +17,7 @@
 // +----------------------------------------------------------------------
 // | 备注：已完成
 // +----------------------------------------------------------------------
-const config = require('../config')//配置文件加载
+//const config = require('../config')//配置文件加载
 const InsunFUN = require('../../util/InsunFUN')
 //const UserLoginModel = require('../models/UserModel.js');
 const Sequelize = require('sequelize')

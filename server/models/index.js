@@ -21,4 +21,4 @@ import TodoList from './todoList.model'
 // 重新创建所有的表结构
 // db.sync({force: true})
 
-export { User}
+export {User}
