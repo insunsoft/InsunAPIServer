@@ -80,7 +80,7 @@ let  User_login =  sequelize.define('insun_ucenter_login', {
     tableName: 'insun_ucenter_login'
   });
 
-module.exports = User_login;
+module.exports = insun_ucenter_login;
 /* 
 validate: {
   is: ["^[a-z]+$",'i'],     // 只允许字母

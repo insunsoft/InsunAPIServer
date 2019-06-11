@@ -34,10 +34,7 @@ const InsunFUN = require('../../util/InsunFUN')
 // | 方式：请求方式GET/POST
 // +----------------------------------------------------------------------
 // | 参数：
-//  * @param username 用户姓名
-//  * @param password 登录密码
-//  * @param mobile 手机号码
-//  * @param data 返回数据
+//  * @param 无
 // +----------------------------------------------------------------------
 // | 返回：JSON
 // +----------------------------------------------------------------------
@@ -46,15 +43,15 @@ const InsunFUN = require('../../util/InsunFUN')
 // | 备注：已完成
 // +----------------------------------------------------------------------
 exports.App_DBConn_Status = async (ctx, next) => {
-    console.log('开始测试数据库连接......');
+    console.log(`服务器端【${process.env.NODE_ENV}】==>开始测试数据库连接.....`);
     await  DBConn.authenticate()
   .then(() => {
     ctx.body = InsunFUN.returnJson(1, '已成功建立连接。' )
-    console.log('已成功建立连接。');
+    console.log(`服务器端【${process.env.NODE_ENV}】==>已成功建立连接。`);
   })
   .catch(err => {
     ctx.body = InsunFUN.returnJson(1, '无法连接到数据库:', err )
-    console.error('无法连接到数据库:', err);
+    console.error(`服务器端【${process.env.NODE_ENV}】==>无法连接到数据库。${err}` );
   });
 }
 //.close()
