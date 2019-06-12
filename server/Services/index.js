@@ -1,9 +1,12 @@
 'use strict';
-const TokenService = require('./TokenVerify');
-const TokenService = require('./EncryptEngine');
+const TokenService= require('./TokenService');
+const EncryptService = require('./EncryptService');
+const DateService= require('./DateService');
+
 module.exports = {
     TokenService,
-    EncryptEngine
+    EncryptService,
+    DateService
 }
 
 
