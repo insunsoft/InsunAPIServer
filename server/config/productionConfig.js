@@ -36,7 +36,7 @@ module.exports = {
    },
    //安全性配置
    security:{
-       secret:'1234567890',
+       secret:'P2y=uf.Keq!/+/RNW7Lu8v?#OOTB',
        avatar:'https://s2.ax1x.com/2019/06/07/V0tI4s.png'//
    
    },

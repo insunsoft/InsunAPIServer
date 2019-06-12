@@ -40,6 +40,8 @@ module.exports = {
     //安全性配置
     security: {
         secret: '1234567890',
+        expires: '1y',
+        alg: 'HS256',
         avatar: 'https://s2.ax1x.com/2019/06/07/V0tI4s.png'//
 
     },
