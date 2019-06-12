@@ -1,5 +1,28 @@
 'use strict';
 //所有有关时间处理的函数放置于此。
+
+
+const   WEEKTYPE = {
+        ZH_DAYNAME: 0,
+        ZH_SDAYNAME: 1,
+        US_DAYNAME: 2,
+        US_SDAYNAME: 3,
+    };
+    const    _options = {
+        ZH: {
+            dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+            shortDayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            shortMonthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+        },
+        US: {
+            dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            shortDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            shortMonthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        }
+    };
+
 module.exports = {
 
 /** 
@@ -266,43 +289,22 @@ module.exports = {
             var index = date.getDay();
             var dateStr = '';
             switch (type) {
-                case this.WEEKTYPE.ZH_DAYNAME:
-                    dateStr = this._options.ZH.dayNames[index];
+                case WEEKTYPE.ZH_DAYNAME:
+                    dateStr = _options.ZH.dayNames[index];
                     break;
-                case this.WEEKTYPE.ZH_SDAYNAME:
-                    dateStr = this._options.ZH.shortDayNames[index];
+                case WEEKTYPE.ZH_SDAYNAME:
+                    dateStr = _options.ZH.shortDayNames[index];
                     break;
-                case this.WEEKTYPE.US_DAYNAME:
-                    dateStr = this._options.US.dayNames[index];
+                case WEEKTYPE.US_DAYNAME:
+                    dateStr = _options.US.dayNames[index];
                     break;
-                case this.WEEKTYPE.US_SDAYNAME:
-                    dateStr = this._options.US.shortDayNames[index];
+                case WEEKTYPE.US_SDAYNAME:
+                    dateStr = _options.US.shortDayNames[index];
                     break;
             }
             return dateStr;
         }
-    },
-    WEEKTYPE = {
-        ZH_DAYNAME: 0,
-        ZH_SDAYNAME: 1,
-        US_DAYNAME: 2,
-        US_SDAYNAME: 3,
-    },
-    _options = {
-        ZH: {
-            dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-            shortDayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-            shortMonthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-        },
-        US: {
-            dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-            shortDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            shortMonthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        }
     }
-
 
 
 }
