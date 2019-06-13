@@ -4,7 +4,8 @@
 // | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
 // | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
-// | 用途: jsonwebtoken中间件的粉状
+// +----------------------------------------------------------------------
+// | 用途: jsonwebtoken中间件的封装
 // | 路径: ./units/TokenUnit.js
 // | 备注：已完成
 // +----------------------------------------------------------------------
