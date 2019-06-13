@@ -6,6 +6,7 @@
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
 // | 用途: jsonwebtoken中间件的粉状
 // | 路径: ./units/TokenUnit.js
+// | 备注：已完成
 // +----------------------------------------------------------------------
 const JWT = require('jsonwebtoken');
 const config = require('../config')//配置文件加载
@@ -29,9 +30,9 @@ module.exports = {
   },
 
   /**
-   * Decode given payload (usually, authorization field from request header)
-   * @param {string} - string with token to decore
-   * @returns {object|null} - object with users data
+   * 解码给定的有效负载（payload）通常是来自请求头的授权字段
+   * @param {string} - token
+   * @returns {object|null} - 对象或者空
    */
    decodeToken:function (payload) {
     try {
