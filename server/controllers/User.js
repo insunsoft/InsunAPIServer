@@ -13,8 +13,8 @@ const DBConn=require('../models/index');
 const Sequelize = DBConn.sequelize;
 const Op = Sequelize.Op;
 const InsunFUN = require('../../util/InsunFUN');
-const config = require('../config')//配置文件加载
-const Service=require('../Services/index');
+const Config = require('../config')//配置文件加载
+const InsunUnits=require('../units/index');
 
 // +----------------------------------------------------------------------
 // | 名称: App_DBConn_Status
