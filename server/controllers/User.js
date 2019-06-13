@@ -243,7 +243,7 @@ exports.App_User_Login= async (ctx, next) => {
         var queryInfo = ctx.request.query
         //获得传入参数
         if (!queryInfo.loginname || !queryInfo.password) {
-            //ctx.status = 200
+            ctx.status = 200
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson( '用户登录信息提供不全', queryInfo)
             return false
         };
