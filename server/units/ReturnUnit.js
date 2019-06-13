@@ -1,5 +1,4 @@
 'use strict';
-'use strict';
 // +----------------------------------------------------------------------
 // | 项目：InsunAPIServer
 // | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
@@ -10,8 +9,7 @@
 // | 路径: ./units/ReturnUnit.js
 // | 备注：已完成 
 // +----------------------------------------------------------------------
-module.exports = {
-    //成功模式
+module.exports = {    //成功模式
     returnSuccessJson: function (msg, data) {
         return {
             code: 'Success',
