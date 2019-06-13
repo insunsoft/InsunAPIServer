@@ -1,3 +1,4 @@
+'use strict';
 // +----------------------------------------------------------------------
 // | InsunAPIServer
 // | Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
