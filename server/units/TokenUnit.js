@@ -30,9 +30,15 @@ module.exports = {
    */
    decodeToken:function (payload) {
     try {
-      return JWT.verify(payload, TOKEN_CONFIG.KEY);
+      let data = jwt.verify(payload, 'token');
+      return {
+        id:data.id
+      };
     } catch (e) {
-      return null;
+      return {
+           data:e 
+      }
     }
+
   }
 }
