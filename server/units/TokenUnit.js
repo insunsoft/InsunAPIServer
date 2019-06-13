@@ -7,7 +7,7 @@
 // +----------------------------------------------------------------------
 // | 用途: jsonwebtoken中间件的封装
 // | 路径: ./units/TokenUnit.js
-// | 备注：已完成
+// | 备注：已完成 
 // +----------------------------------------------------------------------
 const JWT = require('jsonwebtoken');
 const config = require('../config')//配置文件加载
@@ -23,9 +23,9 @@ module.exports = {
    * @param {Object} - 用户数据
    * @returns {string} - 加密字符创即生成的token
    */
-   generateToken:function (data) {
+  generateToken: function (data) {
 
-    const token = JWT.sign(data,TOKEN_CONFIG.KEY,{expiresIn:TOKEN_CONFIG.expires,algorithm:TOKEN_CONFIG.alg});
+    const token = JWT.sign(data, TOKEN_CONFIG.KEY, { expiresIn: TOKEN_CONFIG.expires, algorithm: TOKEN_CONFIG.alg });
     console.log('显示=>原始数据：' + data + 'token:' + token);
     return token;
   },
@@ -35,7 +35,7 @@ module.exports = {
    * @param {string} - token
    * @returns {object|null} - 对象或者空
    */
-   decodeToken:function (payload) {
+  decodeToken: function (payload) {
     try {
       let data = jwt.verify(payload, TOKEN_CONFIG.KEY);
       return {
@@ -43,7 +43,7 @@ module.exports = {
       };
     } catch (e) {
       return {
-           data:e 
+        data: e
       }
     }
 
