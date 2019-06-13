@@ -37,6 +37,10 @@ router.get('/App.User.Logout',User.App_User_Logout);
 router.post('/App.User.Profile',User.App_User_Profile);
 router.post('/App.User.SetStatus',User.App_User_SetStatus); 
 //
+router.post('/App.User.Token',User.App_User_Token);
+router.get('/App.User.Token',User.App_User_Token);
+
+
 module.exports = router
 
 

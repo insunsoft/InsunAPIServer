@@ -36,7 +36,7 @@ console.error(`服务器端==>加载常用中间件完毕。`)
 const config = require('./server/config')//配置文件加载
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
-const index = require('./server/routes/index')//用于默认测试网站根目录。
+const index = require('./server/routes')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载路由文件完毕。`)
 
