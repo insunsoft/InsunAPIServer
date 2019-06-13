@@ -4,13 +4,14 @@ const EncryptUnit = require('./EncryptUnit');
 const DateUnit= require('./DateUnit');
 const ReturnUnit= require('./ReturnUnit');
 const GenUnit= require('./GenUnit');
-
+const StrUnit= require('./StrUnit');
 module.exports = {
     DateUnit,
-    DateUnit,
-    DateUnit,
+    EncryptUnit,
+    TokenUnit,
     ReturnUnit,
-    GenUnit
+    GenUnit,
+    StrUnit
 }
 
 

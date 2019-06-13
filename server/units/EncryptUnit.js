@@ -1,4 +1,8 @@
 'use strict';
+const Config = require('../config')//配置文件加载
+const TOKEN_CONFIG = {
+  KEY: Config.security.secret
+};
 //加密引擎
 /* 查看系统所支持的算法
 使用openssl list-cipher-algorithms可以查看系统所支持的算法
@@ -16,16 +20,17 @@
 
 
 const crypto = require('crypto');
+
 module.exports = {
-    Encryptaes192: function (data, key) {
-		const cipher = crypto.createCipher('aes192', key);
+    Encryptaes192: function (data) {
+		const cipher = crypto.createCipher('aes192', TOKEN_CONFIG.KEY);
 		var crypted = cipher.update(data, 'utf8', 'hex');
 		crypted += cipher.final('hex');
 		return crypted;
 	},
 
-	Decryptaes192: function (encrypted, key) {
-		const decipher = crypto.createDecipher('aes192', key);
+	Decryptaes192: function (encrypted) {
+		const decipher = crypto.createDecipher('aes192', TOKEN_CONFIG.KEY);
 		var decrypted = decipher.update(encrypted, 'hex', 'utf8');
 		decrypted += decipher.final('utf8');
 		return decrypted;

@@ -15,7 +15,7 @@ module.exports = {
    */
    generateToken:function (data) {
 
-    const token = jwt.sign(data, TOKEN_CONFIG.KEY, {
+    const token = JWT.sign(data, TOKEN_CONFIG.KEY, {
       expiresIn: TOKEN_CONFIG.expires,
       algorithm: TOKEN_CONFIG.alg,
     });
@@ -30,7 +30,7 @@ module.exports = {
    */
    decodeToken:function (payload) {
     try {
-      return jwt.verify(payload, TOKEN_CONFIG.KEY);
+      return JWT.verify(payload, TOKEN_CONFIG.KEY);
     } catch (e) {
       return null;
     }
