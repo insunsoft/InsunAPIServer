@@ -1,4 +1,12 @@
 'use strict';
+// +----------------------------------------------------------------------
+// | 项目：InsunAPIServer
+// | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
+// | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
+// | 用途: jsonwebtoken中间件的粉状
+// | 路径: ./units/TokenUnit.js
+// +----------------------------------------------------------------------
 const JWT = require('jsonwebtoken');
 const config = require('../config')//配置文件加载
 const TOKEN_CONFIG = {
@@ -9,9 +17,9 @@ const TOKEN_CONFIG = {
 
 module.exports = {
   /**
-   * Generate token from users data
-   * @param {Object} - user's data
-   * @returns {string} - encoded value, token
+   * 根据用户数据生成 token 
+   * @param {Object} - 用户数据
+   * @returns {string} - 加密字符创即生成的token
    */
    generateToken:function (data) {
 
