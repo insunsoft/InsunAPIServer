@@ -1,5 +1,5 @@
 'use strict';
-const jwt = require('jsonwebtoken');
+const JWT = require('jsonwebtoken');
 const config = require('../config')//配置文件加载
 const TOKEN_CONFIG = {
   KEY: config.security.secret,
