@@ -308,7 +308,7 @@ exports.App_User_Login= async (ctx, next) => {
 exports.App_User_Logout = async (ctx, next) => {
     try {
         var token = ctx.request.header.authorization;
-        console.log('显示=>获得头部传入参数' + token);
+        console.log('显示=>获得头部传入token参数' + token);
        // var queryInfo = ctx.request.query
        // console.log('App_User_Logout显示=>获得传入参数' + queryInfo);
 

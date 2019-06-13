@@ -15,10 +15,7 @@ module.exports = {
    */
    generateToken:function (data) {
 
-    const token = JWT.sign(data,'token',  TOKEN_CONFIG.KEY, {
-      expiresIn: TOKEN_CONFIG.expires,
-      algorithm: TOKEN_CONFIG.alg,
-    });
+    const token = JWT.sign(data,TOKEN_CONFIG.KEY,{expiresIn:TOKEN_CONFIG.expires,algorithm:TOKEN_CONFIG.alg});
     console.log('显示=>原始数据：' + data + 'token:' + token);
     return token;
   },
@@ -30,7 +27,7 @@ module.exports = {
    */
    decodeToken:function (payload) {
     try {
-      let data = jwt.verify(payload, 'token');
+      let data = jwt.verify(payload, TOKEN_CONFIG.KEY);
       return {
         data
       };

@@ -30,7 +30,10 @@ router.get('/App.User.Info',User.App_User_Info);
 router.post('/App.User.Register',User.App_User_Register);
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
 router.post('/App.User.Login',User.App_User_Login);
+
 router.post('/App.User.Logout',User.App_User_Logout);
+router.get('/App.User.Logout',User.App_User_Logout);
+
 router.post('/App.User.Profile',User.App_User_Profile);
 router.post('/App.User.SetStatus',User.App_User_SetStatus); 
 //
