@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : insunserver
 Source Server Version : 50717
 Source Host           : localhost:3306
-Source Database       : insunapisvr
+Source Database       : insunapiserver_development
 
 Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2019-06-10 20:43:53
+Date: 2019-06-14 16:39:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,12 +39,7 @@ CREATE TABLE `insun_ucenter_userinfo` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` int(1) DEFAULT '1' COMMENT '状态(0-时效，1-正常)',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username` (`username`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `insun_ucenter_login` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='用户扩展信息表';
-
--- ----------------------------
--- Records of insun_ucenter_userinfo
--- ----------------------------
-INSERT INTO `insun_ucenter_userinfo` VALUES ('1', '35', '陈剑', 'insunsoft', '951241056@qq.com', '951241056', '1', '432322197408017913', '0', '0', '0', '1', null, '1', '0.00', '2019-06-10 18:35:22', '2019-06-10 20:41:50', '1');
-INSERT INTO `insun_ucenter_userinfo` VALUES ('2', '36', '肖博', 'xiaobo', null, null, '1', null, null, '0', '0', '0', null, '1', '0.00', '2019-06-10 18:35:36', '2019-06-10 18:35:36', '1');
-INSERT INTO `insun_ucenter_userinfo` VALUES ('3', '34', '陈艺璇', 'chenyixuan', null, null, '1', null, null, '0', '0', '0', null, '1', '0.00', '2019-06-10 18:36:09', '2019-06-10 18:36:09', '1');

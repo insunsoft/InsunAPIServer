@@ -35,7 +35,6 @@ module.exports = {
     /** 
      * 具体方法
       1.getTimeAgo: 计算给定时间距离现在的时间
-      
       2. format(date, fmt)
      format 是将 Date类型的时间进行格式化的工具方法：
      DateUnit.format(new Date()) //不传 fmt，则默认为 yyyy-MM-dd hh:mm:ss ;
