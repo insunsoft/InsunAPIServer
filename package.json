@@ -2,10 +2,12 @@
   "name": "insunapiserver",
   "version": "0.1.0",
   "private": true,
+  "main": "./server.js",
   "scripts": {
     "dev": "set NODE_ENV=development&& nodemon ./bin/www --exec ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_ENV=production&& node app.js",
+    "build": "set NODE_ENV=production&& node server.js",
+    "start": "node server.js",
     "说明": "在Mac和Linux上使用export， 在windows上export要换成set"
   },
   "dependencies": {

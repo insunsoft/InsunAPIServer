@@ -23,20 +23,33 @@ router.prefix('/api')
 router.get('/', function (ctx, next) {
     ctx.body = 'Hello Wolrd!,您已成功访问InsunAPIServer！'
 })
+//获取数据库连接状态
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
 router.get('/App.DBConn.Status',User.App_DBConn_Status);
+//获取用户个人信息
 router.post('/App.User.Info',User.App_User_Info);
 router.get('/App.User.Info',User.App_User_Info);
+//用户注册
 router.post('/App.User.Register',User.App_User_Register);
+//用户修改自身密码
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
+//用户登录
 router.post('/App.User.Login',User.App_User_Login);
-
+router.get('/App.User.Login',User.App_User_Login);
+//用户登出
 router.post('/App.User.Logout',User.App_User_Logout);
 router.get('/App.User.Logout',User.App_User_Logout);
-
-router.post('/App.User.Profile',User.App_User_Profile);
+//获取用户所有信息
+router.post('/App.User.AllInfo',User.App_User_AllInfo);
+//修改用户状态
 router.post('/App.User.SetStatus',User.App_User_SetStatus); 
+//管理员无条件重置用户密码
+router.post('/App.User.ResetPasswordForAdmin',User.App_User_ResetPasswordForAdmin); 
 //
+//判断用户是否登陆
+router.post('/App.User.Check',User.App_User_Check); 
+
+
 router.post('/App.User.Token',User.App_User_Token);
 router.get('/App.User.Token',User.App_User_Token);
 

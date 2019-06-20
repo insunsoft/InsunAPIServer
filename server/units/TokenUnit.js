@@ -24,11 +24,11 @@ module.exports = {
  * @returns {string} - 加密字符创即生成的token
  */
 generateToken:function (data) {
-  console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
-  console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
-  console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
+ // console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
+//  console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
+ // console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
   const token =   JWT.sign(data, TOKEN_CONFIG.KEY, { expiresIn: TOKEN_CONFIG.expires, algorithm: TOKEN_CONFIG.alg });
-  console.log('显示=>原始数据：' + JSON.stringify(data) + 'token:' + token);
+ // console.log('显示=>原始数据：' + JSON.stringify(data) + 'token:' + token);
   return token;
 },
 
@@ -39,13 +39,13 @@ generateToken:function (data) {
  */
 decodeToken :function (strToken) {
   try {
-    console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
-    console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
-    console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
-    console.log('generateToken:=>strToken:=>' + strToken);
+  //  console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
+  //  console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
+  //  console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
+   // console.log('generateToken:=>strToken:=>' + strToken);
     
     let payload =  JWT.verify(strToken, TOKEN_CONFIG.KEY);
-    console.log('显示=>原始数据：[' + JSON.stringify(payload) + ']token:' + strToken);
+  //  console.log('显示=>原始数据：[' + JSON.stringify(payload) + ']token:' + strToken);
     return   payload
      } catch (e) {
     return  e

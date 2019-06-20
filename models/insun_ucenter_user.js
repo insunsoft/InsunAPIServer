@@ -1,21 +1,55 @@
 /* jshint indent: 2 */
-//const sequelize =require('sequelize')
-module.exports = function (sequelize, DataTypes) {
-  const UserInfo =  sequelize.define('UserInfo', {
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('insun_ucenter_user', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    user_id: {
-      type: DataTypes.INTEGER(11).UNSIGNED,
-      allowNull: false
-    },
-    username: {
+    loginname: {
       type: DataTypes.STRING(50),
       allowNull: true,
       unique: true
+    },
+    password: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    uuid: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    push_token: {
+      type: DataTypes.STRING(300),
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING(200),
+      allowNull: true
+    },
+    source: {
+      type: DataTypes.INTEGER(2).UNSIGNED,
+      allowNull: true,
+      defaultValue: '2'
+    },
+    social_source: {
+      type: DataTypes.INTEGER(2).UNSIGNED,
+      allowNull: true,
+      defaultValue: '0'
+    },
+    social_uid: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    social_token: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    username: {
+      type: DataTypes.STRING(50),
+      allowNull: true
     },
     nickname: {
       type: DataTypes.STRING(50),
@@ -87,15 +121,6 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '1'
     }
   }, {
-    freezeTableName: true,
-    timestamps: false,
-      tableName: 'insun_ucenter_userinfo'
-    });
-
-/* 
-    UserInfo.associate = function(models) {
-      // Coffee belongsTo UserLogin
-      UserInfo.belongsTo(models.UserLogin, { foreignKey: 'user_id' });
-    }; */
-    return  UserInfo;
+    tableName: 'insun_ucenter_user'
+  });
 };
