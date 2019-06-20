@@ -29,7 +29,7 @@ router.get('/App.DBConn.Status',User.App_DBConn_Status);
 //获取用户个人信息
 router.post('/App.User.Info',User.App_User_Info);
 router.get('/App.User.Info',User.App_User_Info);
-//用户注册
+//用户注册n
 router.post('/App.User.Register',User.App_User_Register);
 //用户修改自身密码
 router.post('/App.User.AlterPassword',User.App_User_AlterPassword);
