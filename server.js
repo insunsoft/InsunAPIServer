@@ -1,59 +1,85 @@
 // +----------------------------------------------------------------------
 // | 项目：InsunAPIServer
-// +----------------------------------------------------------------------
 // | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
-// +----------------------------------------------------------------------
 // | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
-// +----------------------------------------------------------------------
 // | 用途: 基于NodeJS+Koa2的API开发框架。
-// +----------------------------------------------------------------------
-// | 路径: \app.js
-// +----------------------------------------------------------------------
-// | 使用: node app.js 或者 npm run dev
-// +----------------------------------------------------------------------
-// | 样例：
-// +----------------------------------------------------------------------
+// | 路径: \server.js
+// | 使用: node server.js 或者 npm run dev
 // | 备注：已完成
 // +----------------------------------------------------------------------
 
 //+----------------------Koa2核心库-----------------------------------------
 const Koa = require('koa')//web开发框架Koa2核心库加载
 const app = new Koa()//获得Koa2实例
-console.error(`服务器端==>加载NodeJS-Koa2框架核心库...`)
+console.error(`服务器端【${process.env.NODE_ENV}】==>加载NodeJS-Koa2框架核心库...`)
 // +----------------------常用中间件---------------------------------------
 const json = require('koa-json')//
 const bodyparser = require('koa-bodyparser')//处理与post相关的请求
-//const passport = require('koa-passport')
 const path = require('path')// 用于处理目录路径
-const koaStatic = require('koa-static')//
+const koa_Static = require('koa-static')//静态文件
 //const views = require('koa-views')//
-const onerror = require('koa-onerror')//错误处理
-const logger = require('koa-logger')//日志
-console.error(`服务器端==>加载常用中间件完毕。`)
+const koa_onerror = require('koa-onerror')//错误处理
+const koa_logger = require('koa-logger')//日志
+const koa_jwt = require('koa-jwt')//令牌权限
+console.error(`服务器端【${process.env.NODE_ENV}】==>加载常用中间件完毕。`)
 // +----------------------配置文件加载------------------------------------
 const config = require('./server/config')//配置文件加载
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
+const insunToken = require('./server/units/TokenUnit.js')
 const index = require('./server/routes')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载路由文件完毕。`)
 
 // +-----------------------中间件使用--------------------------------------
 // 错误处理
-onerror(app)
+koa_onerror(app)
 app.use(bodyparser())
 app.use(json())
-app.use(logger())
+app.use(koa_logger())
 // 静态资源处理，配置路径
-app.use(koaStatic( path.join(__dirname , './public') ));
-
+app.use(koa_Static( path.join(__dirname , './public') ));
+//模板设置
 // app.use(views(__dirname + '/views', {
 //   extension: 'ejs'
 // })) 
 // logger
+//访问权限控制--------------------------------------------------
+app.use(async(ctx, next)=> {
+    var token = ctx.headers.authorization;
+    if(token == undefined){
+        await next();
+    }else{
+      insunToken.decodeToken(token).then((data)=> {
+        //这一步是为了把解析出来的用户信息存入全局state中，这样在其他任一中间价都可以获取到state中的值
+            ctx.state = {
+                user:data
+            };
+        })
+        await next();
+    }
+})
+//状态
+app.use(async(ctx, next)=>{
+    return next().catch((err) => {
+        if (401 == err.status) {
+          ctx.status = 401;
+            ctx.body = {
+                code:401,
+                msg:'登录过期，请重新登录'
+            }
+        } else {
+            throw err;
+        }
+    });
+});
 
+app.use(koa_jwt({
+	secret:config.security.secret
+}).unless({
+	path: ['/api/App.User.Login','/api/App.User.Register'] //除了这两个地址，其他的URL都需要验证
+}));
 
 app.use(async (ctx, next) => {
   const start = new Date()

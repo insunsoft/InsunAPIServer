@@ -21,7 +21,7 @@ const jwt = require('jsonwebtoken');
 exports.App_User_Token = async (ctx, next) => {
     try {
         //  var token = ctx.request.header.authorization;
-        var queryInfo = ctx.request.query
+        let queryInfo = ctx.request.query
         if (!queryInfo.token) {
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson('安全信息提供不全', queryInfo)
             ctx.status = 401
@@ -616,7 +616,32 @@ exports.CheckUserLogin = function (strToken) {
  */
 //App.User.GetList111111111111
 
+exports.App_Point_Add = async (ctx, next) => {
+    try {
+        //获得参数进行有效性判断
+        var queryInfo = ctx.request.query
+        if (!queryInfo.token) {
+            ctx.body = InsunUnits.ReturnUnit.returnInfoJson('安全参数提供不全,操作失败', queryInfo)
+            return
+        };
+        let payload = await InsunUnits.TokenUnit.decodeToken(queryInfo.token)
+        if (!payload.uuid) {
+            ctx.body = InsunUnits.ReturnUnit.returnInfoJson('用户未登陆', queryInfo)
 
+        } else {
+            var date = new Date();
+            if (payload.lat > date || payload.exp < date) {
+
+            } else {
+                ctx.body = InsunUnits.ReturnUnit.returnInfoJson('安全令牌已失效', queryInfo)
+
+            }
+        }
+    } catch (e) {
+        ctx.body = InsunUnits.ReturnUnit.returnErrorJson('访问应用数据错误', e.toString())
+
+    }
+}
 
 
 

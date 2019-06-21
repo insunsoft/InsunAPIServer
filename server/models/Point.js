@@ -3,8 +3,8 @@
 // | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
 // | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
-// | 用途: 用户数据模块
-// | 路径: ./models/User.js
+// | 用途: 用户积分模块
+// | 路径: ./models/Point.js
 // | 使用: 接受Services层调用
 // | 备注：已完成
 // +----------------------------------------------------------------------
