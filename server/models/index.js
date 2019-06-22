@@ -4,21 +4,6 @@ const Sequelize = require('sequelize');
 const config = require('../config')//配置文件加载
 const basename = path.basename(module.filename);
 
-
-
-/* const DBConn = require('../config/DBConn')//配置文件加载
-const Sequelize = DBConn.sequelize;
-const UserLoginModel = Sequelize.import('./insun_ucenter_login.js')
-const UserInfoModel = Sequelize.import('./insun_ucenter_userinfo.js')
-module.exports = {
-    UserLoginModel,
-    UserInfoModel
-}
- */
-
-
-
-
 const DBConn= {};
 
 //let sequelize;
@@ -39,10 +24,6 @@ const sequelize = new Sequelize(config.database.DATABASE,config.database.USERNAM
     },
     timezone: '+08:00' //东八时区
 }); 
-
-
-
-
 
 
 fs

@@ -39,7 +39,8 @@ module.exports = {
         secret: '1234567890',
         expires: 36000,
         alg: 'HS256',
-        avatar: 'https://s2.ax1x.com/2019/06/07/V0tI4s.png'//
+        avatar: 'https://s2.ax1x.com/2019/06/07/V0tI4s.png',
+        resetpassword:'88888888'
 
     },
     //可以公开访问的动作

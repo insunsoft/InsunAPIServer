@@ -27,8 +27,8 @@ router.get('/', function (ctx, next) {
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
 router.get('/App.DBConn.Status',User.App_DBConn_Status);
 //获取用户个人信息
-router.post('/App.User.Info',User.App_User_Info);
-router.get('/App.User.Info',User.App_User_Info);
+router.post('/App.User.OneInfo',User.App_User_OneInfo);
+router.get('/App.User.OneInfo',User.App_User_OneInfo);
 //用户注册n
 router.post('/App.User.Register',User.App_User_Register);
 //用户修改自身密码
@@ -39,19 +39,19 @@ router.get('/App.User.Login',User.App_User_Login);
 //用户登出
 router.post('/App.User.Logout',User.App_User_Logout);
 router.get('/App.User.Logout',User.App_User_Logout);
-//获取用户所有信息
-router.post('/App.User.AllInfo',User.App_User_AllInfo);
+//获取用户自身所有信息
+router.post('/App.User.SelfInfo',User.App_User_SelfInfo);
 //修改用户状态
 router.post('/App.User.SetStatus',User.App_User_SetStatus); 
 //管理员无条件重置用户密码
 router.post('/App.User.ResetPasswordForAdmin',User.App_User_ResetPasswordForAdmin); 
 //
-//判断用户是否登陆
-router.post('/App.User.Check',User.App_User_Check); 
+// //判断用户是否登陆
+// router.post('/App.User.Check',User.App_User_Check); 
 
 
-router.post('/App.User.Token',User.App_User_Token);
-router.get('/App.User.Token',User.App_User_Token);
+// router.post('/App.User.Token',User.App_User_Token);
+// router.get('/App.User.Token',User.App_User_Token);
 
 
 module.exports = router

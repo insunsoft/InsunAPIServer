@@ -27,7 +27,7 @@ console.error(`服务器端【${process.env.NODE_ENV}】==>加载常用中间件
 const config = require('./server/config')//配置文件加载
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
-const insunToken = require('./server/units/TokenUnit.js')
+const InsunUnits = require('./server/units');
 const index = require('./server/routes')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载路由文件完毕。`)
@@ -47,16 +47,20 @@ app.use(koa_Static( path.join(__dirname , './public') ));
 // logger
 //访问权限控制--------------------------------------------------
 app.use(async(ctx, next)=> {
-    var token = ctx.headers.authorization;
-    if(token == undefined){
+    var dataString = ctx.headers.authorization;
+    console.log(dataString)
+    if(dataString == undefined){
         await next();
     }else{
-      insunToken.decodeToken(token).then((data)=> {
+        const dataArr = dataString.split(' ');
+        const token = dataArr[1];
+     var data =  InsunUnits.TokenUnit.decodeToken(token)
+     if (data){
         //这一步是为了把解析出来的用户信息存入全局state中，这样在其他任一中间价都可以获取到state中的值
-            ctx.state = {
-                user:data
-            };
-        })
+            ctx.state.user =data
+  
+            console.log(ctx.state.user)
+        }
         await next();
     }
 })
