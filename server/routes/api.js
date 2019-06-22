@@ -43,8 +43,13 @@ router.get('/App.User.Logout',User.App_User_Logout);
 router.post('/App.User.SelfInfo',User.App_User_SelfInfo);
 //修改用户状态
 router.post('/App.User.SetStatus',User.App_User_SetStatus); 
+
+router.post('/App.Point.Add',User.App_Point_Add); 
+router.get('/App.Point.Add',User.App_Point_Add); 
+
 //管理员无条件重置用户密码
 router.post('/App.User.ResetPasswordForAdmin',User.App_User_ResetPasswordForAdmin); 
+
 //
 // //判断用户是否登陆
 // router.post('/App.User.Check',User.App_User_Check); 
