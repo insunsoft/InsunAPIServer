@@ -26,7 +26,7 @@ exports.App_DBConn_Status = async (ctx, next) => {
     // | 返回：json
     // | 备注：已完成
     // +----------------------------------------------------------------------
-    console.log(`服务器端【${process.env.NODE_ENV}】==>开始测试数据库连接.....`);
+    // console.log(`服务器端【${process.env.NODE_ENV}】==>开始测试数据库连接.....`);
     await DBConn.sequelize.authenticate()
         .then(() => {
             let DBInfo = {}
@@ -34,12 +34,11 @@ exports.App_DBConn_Status = async (ctx, next) => {
             DBInfo.database = '数据库名称==>' + DBConn.database
             DBInfo.host = '主机名称==>' + DBConn.host
             ctx.status = 200
-            ctx.body = Insun.ReturnUnit.returnSuccessJson('已成功建立连接。', DBInfo)
-
+            return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '已成功建立连接。', DBInfo)
         })
         .catch(e => {
-            ctx.body = Insun.ReturnUnit.returnErrorJson('无法连接到数据库:', e.toString())
-            ctx.throw(500)
+            ctx.status = 500
+            return ctx.body = Insun.ReturnUnit.returnErrorJson(500, '无法连接到数据库:', e.toString())
         });
 }
 // | 用途: 用户登录 返回Token 100%
@@ -64,7 +63,7 @@ exports.App_User_Login = async (ctx, next) => {
             ctx.status = 400
             return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-参数提供不全！', queryInfo)
         } else {
-           
+
             let DBresult = await DBConn.Users.findOne({
                 attributes: ['user_id', 'loginname', 'password', 'avatar', 'role_level', 'push_token'],
                 where: {
@@ -72,12 +71,12 @@ exports.App_User_Login = async (ctx, next) => {
                 }
             })
             //console.log('显示=>服务端数据返回:'+ JSON.stringify(DBresult))
-           
+
             if (!DBresult) {
                 ctx.status = 400
                 return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-该手机号未注册！', queryInfo)
             } else {
-                let OldDBPassword =  Insun.EncryptUnit.Decryptaes192(DBresult.password)
+                let OldDBPassword = await Insun.EncryptUnit.Decryptaes192(DBresult.password)
                 //console.log('显示=>服务端加密密码:' + DBresult.password);
                 //console.log('显示=>解密服务端密码:' + OldDBPassword)
                 //console.log('显示=>客户端传入密码:' + queryInfo.password)
@@ -103,21 +102,21 @@ exports.App_User_Login = async (ctx, next) => {
                     return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '用户登录-成功！', rtnInfo);
                 } else {
                     ctx.status = 400// console.log('判断=>不等于');
-                    return ctx.body = await Insun.ReturnUnit.returnInfoJson(400,'用户登录-密码输入错误！', queryInfo)
+                    return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-密码输入错误！', queryInfo)
                 }
             }
         }
     } catch (e) {
         ctx.status = 500
-        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500,'用户登录-服务器访问错误！', e.toString())
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500, '用户登录-服务器访问错误！', e.toString())
     }
 }
-// | 用途: 根据手机号获得一个用户的信息
-exports.App_User_OneInfo = async (ctx, next) => {
+// | 用途: 根据手机号获得一个用户的信息 100%
+exports.App_User_ByMobile = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_OneInfo 
     // | 用途: 根据手机号获得一个用户的信息
-    // | 使用: http://localhost:3000/api/App.User.OneInfo 
+    // | 使用: http://localhost:3000/api/App.User.ByMobile
     // | 方式：请求方式GET/POST
     // | 参数：@param 无
     // | 返回：
@@ -126,31 +125,62 @@ exports.App_User_OneInfo = async (ctx, next) => {
     // +----------------------------------------------------------------------
     try {
         //获得传入参数
-        var queryInfo = ctx.request.query
+        let queryInfo = ctx.request.query
         if (!queryInfo.mobile) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '用户姓名、手机等参数不全,请重新输入!', queryInfo)
             ctx.status = 400
-            return
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
         };
-        let result = await DBConn.Users.findOne({ where: { loginname: queryInfo.mobile } })
+        let DBresult = await DBConn.Users.findOne({ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
-        if (!result) {
+        if (!DBresult) {
             //无记录
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '数据库中未找到该用户信息。', queryInfo)
             ctx.status = 400
-            return
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
         } else {
-            ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '查询成功。', result)
             ctx.status = 200
-            return true
+            return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, 'App_User_ByMobile-成功。', DBresult)
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误，请联系开发人员。', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500, 'App_User_ByMobile-访问应用数据错误，请联系开发人员。', e.toString())
     }
 }
-// | 用途: 进行新用户注册，简单地创建一个基本的用户
+// | 用途: 根据UUID获得一个用户的信息 100%
+exports.App_User_ByUUID = async (ctx, next) => {
+    // +----------------------------------------------------------------------
+    // | 名称: App_User_ByUUID
+    // | 用途: 根据手机号获得一个用户的信息
+    // | 使用: http://localhost:3000/api/App.User.ByUUID
+    // | 方式：请求方式GET/POST
+    // | 参数：@param 无
+    // | 返回：
+    // | 样例：
+    // | 备注：已完成100%
+    // +----------------------------------------------------------------------
+    try {
+        //获得传入参数
+        let queryInfo = ctx.request.query
+        if (!queryInfo.UUID) {
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
+        };
+        let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.UUID } })
+        // 返回数据库中是否有用该手机注册的用户
+        if (!DBresult) {
+            //无记录
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
+        } else {
+            ctx.status = 200
+            return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, 'App_User_ByMobile-成功。', DBresult)
+        }
+    } catch (e) {
+        ctx.status = 500
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500, 'App_User_ByMobile-访问应用数据错误，请联系开发人员。', e.toString())
+    }
+}
+
+// | 用途: 进行新用户注册，简单地创建一个基本的用户100%
 exports.App_User_Register = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_Register
@@ -166,45 +196,49 @@ exports.App_User_Register = async (ctx, next) => {
     // | 备注：完成100%
     // +----------------------------------------------------------------------   
     try {
-        var queryInfo = ctx.request.query
+        let queryInfo = ctx.request.query
         //获得传入参数
         if (!queryInfo.loginname || !queryInfo.password) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '手机、密码等参数不全,请重新输入!', queryInfo)
-            return false
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_Register-参数提供不全!', queryInfo)
         };
         let result = await DBConn.Users.count({ where: { loginname: queryInfo.loginname } })
         // 返回数据库中是否有用该手机注册的用户
         if (result > 0) {
             //有记录
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '该手机号码已经被注册。请更换后重新注册。', queryInfo)
-            return false
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_Register-该手机号码已经被注册。请更换后重新注册。', queryInfo)
+
         } else {
             //没有记录
             //在数组对象中产生一些数据，用于新增用户的准备.
             queryInfo.push_token = ''
             //生成唯一ID
-            queryInfo.uuid = Insun.StrUnit.generateUUID();
+            queryInfo.uuid = await Insun.StrUnit.generateUUID();
             //明文密码予以加密
-            queryInfo.password = Insun.EncryptUnit.Encryptaes192(queryInfo.password, Config.security.secret)
+            queryInfo.password = await Insun.EncryptUnit.Encryptaes192(queryInfo.password, Config.security.secret)
             //根据系统设置默认图像，用于前端显示
             queryInfo.avatar = Config.security.avatar;
             queryInfo.role_level = 0//普通用户
             try {
                 //模块创建一个用户
                 let newUser = await DBConn.Users.create(queryInfo)
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `您已成功注册为【${Config.appinfo.app_name_zh}】用户！`, newUser);
+                ctx.status = 200
+                return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, `App_User_Register-您已成功注册为【${Config.appinfo.app_name_zh}】用户！`, newUser);
             } catch (err) {
                 //数据保存错误
-                ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据保存错误,操作失败!', err.toString());
-                throw new Error(err);
+                ctx.status = 400
+                return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_Register-数据保存错误,操作失败!', err.toString());
+
             }
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '服务器访问应用数据错误，请联系开发人员。', e.toString())
+        ctx.status = 500
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500, 'App_User_Register-服务器访问应用数据错误，请联系开发人员。', e.toString())
     }
 
 }
-// | 用途: 用户修改自己登录密码
+// | 用途: 用户修改自己登录密码 100%
 exports.App_User_AlterPassword = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_AlterPassword
@@ -219,51 +253,39 @@ exports.App_User_AlterPassword = async (ctx, next) => {
     // | 备注：
     // +----------------------------------------------------------------------
     try {
-        var queryInfo = ctx.request.query
-
+        let queryInfo = ctx.request.query
         //获得传入参数token以及新旧密码
         if (!queryInfo.old_password || !queryInfo.new_password) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '密码参数提供不全,,请重新输入!', queryInfo)
             ctx.status = 400
-            return false
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '参数提供不全!', queryInfo)
         };
-        if (!queryInfo.uuid) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '用户参数提供不全,,请重新输入!', queryInfo)
-            ctx.status = 400
-            return false
-        };
-        let result = await DBConn.Users.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await DBConn.Users.findOne({ where: { user_id: ctx.state.user.user_id } })
         if (!result) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '系统无此用户', queryInfo)
             ctx.status = 400
-            return
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '系统无此用户', queryInfo)
         } else {
             //将原数据库密码解密
-            var OldDBPassword = Insun.EncryptUnit.Decryptaes192(result.password, config.security.secret)
+            let OldDBPassword = await Insun.EncryptUnit.Decryptaes192(result.password)
             //比较，如果一致
             if (OldDBPassword === queryInfo.old_password) {
                 //更新数据库的加密密码
-                var NewDBPassword = Insun.EncryptUnit.Encryptaes192(queryInfo.new_password, config.security.secret)
-                var prams = { 'password': NewDBPassword };
-                User.update(prams, { 'where': { 'uuid': queryInfo.uuid } })
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '更新密码成功', {});
+                let NewDBPassword = await Insun.EncryptUnit.Encryptaes192(queryInfo.new_password)
+                let prams = { 'password': NewDBPassword };
+                await DBConn.Users.update(prams, { 'where': { 'user_id': ctx.state.user.user_id } })
                 ctx.status = 200
-                return true
+                return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '更新密码成功', {});
             } else {
-                ctx.body = Insun.ReturnUnit.returnInfoJson(400, '原有密码比对错误，请重新输入', {});
                 ctx.status = 400
-                return
+                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '密码比对错误，请重新输入', {});
             }
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误，请联系开发人员。', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误，请联系开发人员。', e.toString())
+
     }
-
 }
-
-// | 用途: 用户退出
+// | 用途: 用户退出 100%
 exports.App_User_Logout = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_Logout
@@ -273,38 +295,25 @@ exports.App_User_Logout = async (ctx, next) => {
     // | 备注：
     // +----------------------------------------------------------------------   
     try {
-        //  var token = ctx.request.header.authorization;
-        //  console.log('显示=>获得头部传入token参数' + token);
-
-        let payload = await Insun.TokenUnit.decodeToken(queryInfo.token)
-        let Userinfo = {}
-        Userinfo.uuid = payload.uuid,
-            Userinfo.loginname = payload.loginname
-
-        console.log('显示=>解码token' + JSON.stringify(Userinfo));
-        ctx.body = Insun.ReturnUnit.returnSuccessJson('用户解锁', Userinfo)
-        /* 
-                let result = await DBConn.UserLogin.findOne({ where: { uuid: queryInfo.uuid } })
-                console.log('显示=>返回用户结果：' + JSON.stringify(result));
-                if (!result) {
-                    ctx.body = Insun.ReturnUnit.returnInfoJson('用户未注册', queryInfo)
-                    console.log('查询=>没有记录');
-                    return
-                } else {
-                    var pram = { 'push_token': null };
-                    //更新
-                    DBConn.UserLogin.update(pram, { 'where': { 'uuid': result.uuid } })
-                    ctx.body = Insun.ReturnUnit.returnSuccessJson( '退出系统成功');
-                } */
+        let result = await DBConn.Users.findOne({ where: { user_id: ctx.state.user.user_id } })
+        // console.log('显示=>返回用户结果：' + JSON.stringify(result));
+        if (!result) {
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户未注册')
+            // console.log('查询=>没有记录');
+        } else {
+            var pram = { 'push_token': null };
+            //更新
+            await DBConn.Users.update(pram, { 'where': { 'user_id': result.user_id } })
+            return ctx.body = await Insun.ReturnUnit.returnSuccessJson(500, '退出系统成功');
+        }
     } catch (e) {
-        console.log('服务端发生错误')
-        ctx.body = Insun.ReturnUnit.returnErrorJson('服务器访问应用数据错误', e.toString())
+
+        ctx.status = 500
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson('服务器访问应用数据错误', e.toString())
     }
 }
 
-
-
-// | 用途: 用户获得自己所有的信息
+// | 用途: 用户获得自己所有的信息 100%
 exports.App_User_SelfInfo = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_SelfAllInfo
@@ -322,30 +331,30 @@ exports.App_User_SelfInfo = async (ctx, next) => {
         //获得全局参数，属于Token传过来的值，一个包含loginname和uuid的对象
         let queryInfo = ctx.state.user
         //console.log(queryInfo)
-        if (!queryInfo.uuid) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
+        if (!queryInfo.user_id) {
             ctx.status = 400
-            return
+            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
+
         } else {
-            let result = await DBConn.Users.findOne({ 'where': { uuid: queryInfo.uuid } })
+            let result = await DBConn.Users.findOne({ 'where': { user_id: queryInfo.user_id } })
             if (!result) {
-                ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，请重新查找', {})
                 ctx.status = 400
-                return
+                return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，请重新查找', {})
+
             } else {
                 ctx.status = 200
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '获取用户信息成功', result);
-                return true
+                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '获取用户信息成功', result);
+
             }
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
+
     }
 }
-// | 用途: 设置用户是否有效
-exports.App_User_SetStatus = async (ctx, next) => {
+// | 用途: 管理员设置用户是否有效 100%
+exports.App_User_SetStatusForAdmin = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_SetStatus
     // | 用途: 设置用户是否有效
@@ -353,45 +362,50 @@ exports.App_User_SetStatus = async (ctx, next) => {
     // | 方式：请求方式GET/POST
     // +----------------------------------------------------------------------
     // | 参数：
-    //  * @param uuid	字符串	必须		最小：32；最大：32	UUID，全局唯一用户ID
+    //  * @param user_id	字符串	必须		最小：32；最大：32	UUID，全局唯一用户ID
     //  * @param status	int 	必须		0-失效 1-有效 other-失效
     //  * @return
     // +----------------------------------------------------------------------
     // | 备注：
     // +----------------------------------------------------------------------
     try {
+        let RoleLevel = ctx.state.user.role_level
         //获得全局参数，属于Token传过来的值，一个包含loginname和uuid的对象
-        let queryInfo = ctx.state.user
-        //console.log(queryInfo)
-        if (!queryInfo.uuid) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
-            ctx.status = 400
-            return
-        } else {
-            let result = await DBConn.Users.findOne({ where: { uuid: queryInfo.uuid } })
-            if (!result) {
-                ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法设置状态', queryInfo)
+        let queryInfo = ctx.request.query
+        if (RoleLevel == 3) {
+            //如果是管理员
+            if (!queryInfo.user_id) {
                 ctx.status = 400
-                return
+                return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
+
             } else {
-                if (queryInfo.status != 0 || queryInfo.status != 1) {
-                    //默认设为失效
-                    queryInfo.status = 0;
+
+                let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.user_id } })
+                if (!DBresult) {
+                    ctx.status = 400
+                    return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法设置状态', queryInfo)
+                } else {
+                    if (queryInfo.status != 0 || queryInfo.status != 1) {
+                        //默认设为失效
+                        queryInfo.status = 0;
+                    }
+                    var prams = { 'status': queryInfo.status };
+                    //更新
+                    DBConn.Users.update(prams, { 'where': { 'user_id': DBresult.user_id } })
+                    ctx.status = 200
+                    return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '设置用户状态成功');
                 }
-                var prams = { 'status': status };
-                //更新
-                DBConn.Users.update(prams, { 'where': { 'uuid': result.uuid } })
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '设置用户状态成功');
-                ctx.status = 200
-                return true
             }
+        } else {
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnSuccessJson(400, '非管理员权限');
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
         ctx.status = 500
+        return ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
     }
 }
-// | 用途: 重置会员密码，不需要原来密码，但需要任意一位管理员登录态。
+// | 用途: 重置会员密码，不需要原来密码，但需要任意一位管理员登录态。100%
 exports.App_User_ResetPasswordForAdmin = async (ctx, next) => {
     // +----------------------------------------------------------------------
     // | 名称: App_User_ResetPasswordForAdmin
@@ -405,37 +419,34 @@ exports.App_User_ResetPasswordForAdmin = async (ctx, next) => {
     // | 备注：完成
     // +----------------------------------------------------------------------   
     try {
+        let RoleLevel = ctx.state.user.role_level
         //获得参数进行有效性判断
         let queryInfo = ctx.request.query
-        if (!queryInfo.uuid) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全,操作失败', queryInfo)
+        if (!queryInfo.user_id) {
             ctx.status = 400
-            return
+            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全,操作失败', queryInfo)
         };
-        let adminInfo = ctx.state.user
-        //判断是否管理员操作
-        if (adminInfo.role_level !== 3) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '非管理员角色无法执行该操作', queryInfo)
-        } else {
-            let result = await DBConn.User.findOne({ where: { uuid: queryInfo.uuid } })
-            if (!result) {
-                ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法重置密码', queryInfo)
+        if (RoleLevel == 3) {
+            //如果是管理员
+            let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.user_id } })
+            if (!DBresult) {
                 ctx.status = 400
-                return
+                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法重置密码', queryInfo)
             } else {
-                tmppassword = Insun.EncryptUnit.Encryptaes192(Config.security.resetpassword, Config.security.secret)
+                tmppassword = await Insun.EncryptUnit.Encryptaes192(Config.security.resetpassword, Config.security.secret)
                 let prams = { 'password': tmppassword };
                 //更新
-                DBConn.Users.update(prams, { 'where': { 'uuid': queryInfo.uuid } })
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '重置用户密码成功');
+                await DBConn.Users.update(prams, { 'where': { 'user_id': queryInfo.user_id } })
                 ctx.status = 200
-                return true
+                return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '重置用户密码成功');
             }
+        } else {
+            ctx.status = 400
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '非管理员权限', queryInfo)
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = Insun.ReturnUnit.returnErrorJson(500, '访问应用数据错误', e.toString())
     }
 }
 

@@ -71,7 +71,7 @@ app.use(async(ctx, next)=>{
           ctx.status = 401;
             ctx.body = {
                 code:401,
-                msg:'登录过期，请重新登录'
+                msg:'登录令牌失效，请重新登录。'
             }
         } else {
             throw err;
@@ -82,7 +82,7 @@ app.use(async(ctx, next)=>{
 app.use(koa_jwt({
 	secret:config.security.secret
 }).unless({
-	path: ['/api/App.User.Login','/api/App.User.Register'] //除了这两个地址，其他的URL都需要验证
+	path: ['/api/','/api/App.User.Login','/api/App.User.Register','/api/App.DBConn.Status','/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
 }));
 
 app.use(async (ctx, next) => {
