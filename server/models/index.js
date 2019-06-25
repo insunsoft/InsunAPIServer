@@ -1,31 +1,40 @@
+'use strict';
+// +----------------------------------------------------------------------
+// | 项目：InsunAPIServer
+// | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
+// | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
+// | 用途: 批量挂载数据模型
+// | 路径: ./models/index.js
+// | 使用: 
+// | 备注：已完成100%
+// +----------------------------------------------------------------------
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const config = require('../config')//配置文件加载
 const basename = path.basename(module.filename);
+const DBConn = {};
 
-const DBConn= {};
+let sequelize = new Sequelize(config.database.DATABASE, config.database.USERNAME, config.database.PASSWORD, {
+  host: config.database.HOST,
+  port: config.database.PORT,
+  dialect: config.server.db_type,
+  dialectOptions: {
+    charset: "utf8mb4",
+    supportBigNumbers: true,
+    bigNumberStrings: true
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  timezone: '+08:00' //东八时区
+});
 
-//let sequelize;
-const sequelize = new Sequelize(config.database.DATABASE,config.database.USERNAME, config.database.PASSWORD, {
-    host: config.database.HOST,
-    port: config.database.PORT,
-    dialect: config.server.db_type,
-        dialectOptions: {
-        charset: "utf8mb4",
-        supportBigNumbers: true,
-        bigNumberStrings: true
-    },
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    },
-    timezone: '+08:00' //东八时区
-}); 
-
-
+//遍历目录下文件，挂载数据模型
 fs
   .readdirSync(__dirname)
   .filter((file) =>
@@ -34,18 +43,20 @@ fs
     (file.slice(-3) === '.js'))
   .forEach((file) => {
     const model = sequelize.import(path.join(__dirname, file));
+    //挂载数据模型
     DBConn[model.name] = model;
   });
-
+//挂载关联模型
 Object.keys(DBConn).forEach((modelName) => {
   if (DBConn[modelName].associate) {
     DBConn[modelName].associate(DBConn);
   }
 });
 
+//挂载对象
 DBConn.sequelize = sequelize;
 DBConn.Sequelize = Sequelize;
-//这个地方疯狂加属性。
+//这个地方疯狂挂载属性。===========
 DBConn.database = config.database.DATABASE;
 DBConn.username = config.database.USERNAME;
 DBConn.password = config.database.PASSWORD;

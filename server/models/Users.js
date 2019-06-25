@@ -1,3 +1,4 @@
+'use strict';
 // +----------------------------------------------------------------------
 // | 项目：InsunAPIServer
 // | 版权：Copyright (c) 1974~2019 http://insunsoft.com All rights reserved.
@@ -5,12 +6,12 @@
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
 // | 用途: 用户数据模块
 // | 路径: ./models/User.js
-// | 使用: 接受Services层调用
+// | 使用: 接受controllers层调用
 // | 备注：已完成
 // +----------------------------------------------------------------------
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('User', {
+module.exports = function (sequelize, DataTypes) {
+  const Users =  sequelize.define('Users', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
@@ -28,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       comment: '登录密码-加密之后存储,只允许字母和数字'
     },
-    uuid: {
+    user_id: {
       type: DataTypes.STRING(128),
       allowNull: true,
       comment: 'UUID-唯一编码'
@@ -44,7 +45,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '0',
       comment: '用户全县(0->普通, 1->发布, 2->管理, 3->超级管理)'
     },
-    avatar:  {
+    avatar: {
       type: DataTypes.STRING(200),
       allowNull: true,
       comment: '用户图像-相对或绝对路径'
@@ -159,17 +160,41 @@ module.exports = function(sequelize, DataTypes) {
       comment: '状态(0-失效 1-正常)'
     }
   }, {
-    freezeTableName: true,
-    timestamps: false,
-    tableName: 'insun_ucenter_user'
-  });
-  return User;
+      freezeTableName: true,
+      timestamps: false,
+      tableName: 'insun_ucenter_user'
+    });
+  Users.associate = function (models) {
+    users.hasMany(models.Points, {
+      foreignKey: 'user_id'
+    })
+    // associations can be defined here
+    /* users.belongsTo(models.carts,{
+      foreignKey: 'user_id'
+    }) */
+  //用户对应多条积分记录
+
+    /*   users.hasMany(models.orders, {
+      foreignKey: 'user_id'
+    })
+    users.belongsToMany(models.goods, {
+      // as:'',
+      foreignKey: 'user_id',
+      through: {
+        model: models.carts
+      }
+    }) */
+
+  };
+
+
+  return Users;
 };
 
 
 
 
-    
+
 
 /*
 validate: {

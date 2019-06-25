@@ -4,13 +4,13 @@
 // | 授权：Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // | 作者: insunsoft-濮堂.陈剑 <951241056@QQ.com>
 // | 用途: 用户积分模块
-// | 路径: ./models/Point.js
-// | 使用: 接受Services层调用
+// | 路径: ./models/Points.js
+// | 使用: 接受controllers层调用
 // | 备注：已完成
 // +----------------------------------------------------------------------
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Point', {
+  const Points= sequelize.define('Points', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
@@ -18,9 +18,9 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     user_id: {
-      type: DataTypes.INTEGER(11).UNSIGNED,
+      type: DataTypes.STRING(128).UNSIGNED,
       allowNull: false,
-      comment: '用户编号'
+      comment: '外键，关联user表的UUID'
     },
     source: {
       type: DataTypes.INTEGER(2).UNSIGNED,
@@ -52,11 +52,40 @@ module.exports = function(sequelize, DataTypes) {
     status: {
       type: DataTypes.INTEGER(1).UNSIGNED,
       allowNull: false,
-      defaultValue: '1'
+      defaultValue: '1',
+      comment: '状态(0-失效 1-正常)'
     }
   }, {
     freezeTableName: true,
     timestamps: false,
     tableName: 'insun_ucenter_point'
   });
+
+  Points.associate = function (models) {
+    // associations can be defined here
+    /* users.belongsTo(models.carts,{
+      foreignKey: 'user_id'
+    }) */
+
+   /*  users.hasMany(models.address, {
+      foreignKey: 'user_id'
+    })
+    users.hasMany(models.orders, {
+      foreignKey: 'user_id'
+    })
+    users.belongsToMany(models.goods, {
+      // as:'',
+      foreignKey: 'user_id',
+      through: {
+        model: models.carts
+      }
+    }) */
+
+  };
+
+
+  return Points;
+
+
+
 };
