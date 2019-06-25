@@ -59,51 +59,57 @@ exports.App_User_Login = async (ctx, next) => {
     try {
         //获得传入参数
         let queryInfo = ctx.request.query
-
+        //console.log('显示=>客户端传递参数:'+ JSON.stringify( queryInfo))
         if (!queryInfo.loginname || !queryInfo.password) {
             ctx.status = 400
-            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '用户登录信息提供不全', queryInfo)
-        };
-        let result
-        
-            result = DBConn.Users.findOne({
+            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-参数提供不全！', queryInfo)
+        } else {
+           
+            let DBresult = await DBConn.Users.findOne({
+                attributes: ['user_id', 'loginname', 'password', 'avatar', 'role_level', 'push_token'],
                 where: {
                     loginname: queryInfo.loginname
                 }
             })
-            var OldDBPassword = Insun.EncryptUnit.Decryptaes192(result.password)
-            console.log('显示=>解密数据库密码：' + OldDBPassword);
-            if (OldDBPassword === queryInfo.password) {
-                // console.log('判断=>等于');
-                //取得token
-                let payload = {}
-                payload.loginname = result.loginname
-                payload.user_id = result.user_id
-                payload.role_level = result.role_level
-                var tmpToken = Insun.TokenUnit.generateToken(payload)
-                //console.log('显示=>Token：' + tmpToken);
-                var prams = { 'push_token': tmpToken };
-                //更新
-                DBConn.Users.update(prams, { 'where': { 'user_id': result.user_id } })
-                var rtnInfo = {}
-                rtnInfo.user_id = result.user_id
-                rtnInfo.loginname = result.loginname
-                rtnInfo.avatar = result.avatar
-                rtnInfo.token = tmpToken;
-                ctx.status = 200
-                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '登录系统成功', rtnInfo);
+            //console.log('显示=>服务端数据返回:'+ JSON.stringify(DBresult))
+           
+            if (!DBresult) {
+                ctx.status = 400
+                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-该手机号未注册！', queryInfo)
             } else {
-                ctx.status = 400// console.log('判断=>不等于');
-                return ctx.body = Insun.ReturnUnit.returnInfoJson('密码错误！', queryInfo)
+                let OldDBPassword =  Insun.EncryptUnit.Decryptaes192(DBresult.password)
+                //console.log('显示=>服务端加密密码:' + DBresult.password);
+                //console.log('显示=>解密服务端密码:' + OldDBPassword)
+                //console.log('显示=>客户端传入密码:' + queryInfo.password)
+                if (queryInfo.password === OldDBPassword) {
+
+                    //判断等于;
+                    //取得token
+                    let payload = {}
+                    payload.loginname = DBresult.loginname
+                    payload.user_id = DBresult.user_id
+                    payload.role_level = DBresult.role_level
+                    var tmpToken = await Insun.TokenUnit.generateToken(payload)
+                    console.log('显示=>生成的Token:' + tmpToken);
+                    var prams = { 'push_token': tmpToken };
+                    //更新
+                    await DBConn.Users.update(prams, { 'where': { 'user_id': DBresult.user_id } })
+                    var rtnInfo = {}
+                    rtnInfo.user_id = DBresult.user_id
+                    rtnInfo.loginname = DBresult.loginname
+                    rtnInfo.avatar = DBresult.avatar
+                    rtnInfo.token = tmpToken;
+                    ctx.status = 200
+                    return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '用户登录-成功！', rtnInfo);
+                } else {
+                    ctx.status = 400// console.log('判断=>不等于');
+                    return ctx.body = await Insun.ReturnUnit.returnInfoJson(400,'用户登录-密码输入错误！', queryInfo)
+                }
             }
-
-
-
-
-
+        }
     } catch (e) {
         ctx.status = 500
-        return ctx.body = Insun.ReturnUnit.returnErrorJson('服务器访问应用数据错误', e.toString())
+        return ctx.body = await Insun.ReturnUnit.returnErrorJson(500,'用户登录-服务器访问错误！', e.toString())
     }
 }
 // | 用途: 根据手机号获得一个用户的信息
