@@ -33,16 +33,17 @@ exports.App_DBConn_Status = async (ctx, next) => {
             DBInfo.message = '运行环境==>' + process.env.NODE_ENV
             DBInfo.database = '数据库名称==>' + DBConn.database
             DBInfo.host = '主机名称==>' + DBConn.host
-            DBInfo.type = '主机名称==>' +Sequelize.getDialect() 
+            DBInfo.type = '主机名称==>' + Sequelize.getDialect()
 
             Sequelize.query('SELECT sum(change_point) as pointcount from insun_ucenter_point where user_id=:user_id and source=:source', {
-                replacements : {
-                    user_id : '0046ae5d-4ab6-d0d8-b4eb-4fe39bf2765a', //按:后的标识名传入其替换成的值
-                    source:1
+                replacements: {
+                    user_id: '0046ae5d-4ab6-d0d8-b4eb-4fe39bf2765a', //按:后的标识名传入其替换成的值
+                    source: 1
                 },
-                 type: Sequelize.QueryTypes.SELECT }).then(function (results) {
+                type: Sequelize.QueryTypes.SELECT
+            }).then(function (results) {
                 console.log(results)
-              })
+            })
 
 
 
@@ -510,29 +511,27 @@ exports.App_Point_count = async (ctx, next) => {
     // | 备注：
     // +----------------------------------------------------------------------   
     try {
-
+        let userpointcount
         //获得参数进行有效性判断
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id) {
             ctx.status = 400
-            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
+            return ctx.body =await Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
         } else {
-            try {
-                //模块统计一个积分
-                let newPointCount = await DBConn.Points.findAll(
-                    {attributes: [[Sequelize.fn('COUNT', Sequelize.col('change_point')), 'sum_point']]},{
-                    where: {
-                        user_id: queryInfo.user_id
-                    }
-                })
-                ctx.status = 200
-                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `成功！`, newPointCount);
+            await  Sequelize.query('SELECT user_id,sum(change_point) as pointcount from insun_ucenter_point where user_id=:user_id ', {
+                replacements: {
+                    user_id: queryInfo.user_id, //按:后的标识名传入其替换成的值
+                },
+                type: Sequelize.QueryTypes.SELECT
+            }).then(results => {
+                /*  console.log(results)
+                 console.log(JSON.stringify(results)).pointcount */
+                 userpointcount = results
 
-            } catch (err) {
-                //数据保存错误
-                ctx.status = 500
-                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据操作失败!', err.toString());
-            }
+            })
+                ctx.status = 200
+                ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, `成功！`,userpointcount);
+
         }
     } catch (e) {
         ctx.status = 500

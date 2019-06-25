@@ -48,7 +48,7 @@ app.use(koa_Static( path.join(__dirname , './public') ));
 //访问权限控制--------------------------------------------------
 app.use(async(ctx, next)=> {
     var dataString = ctx.headers.authorization;
-    console.log(dataString)
+   // console.log(dataString)
     if(dataString == undefined){
         await next();
     }else{
@@ -59,7 +59,7 @@ app.use(async(ctx, next)=> {
         //这一步是为了把解析出来的用户信息存入全局state中，这样在其他任一中间价都可以获取到state中的值
             ctx.state.user =data
   
-            console.log(ctx.state.user)
+         //   console.log(ctx.state.user)
         }
         await next();
     }
