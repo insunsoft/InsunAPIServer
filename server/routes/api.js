@@ -58,7 +58,8 @@ router.post('/App.User.ResetPasswordForAdmin',User.App_User_ResetPasswordForAdmi
 //管理员==修改任意用户状态
 router.post('/App.User.SetStatusForAdmin',User.App_User_SetStatusForAdmin); 
 
-//
+router.post('/App.Point.count',User.App_Point_count); 
+
 // //判断用户是否登陆
 // router.post('/App.User.Check',User.App_User_Check); 
 

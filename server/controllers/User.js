@@ -33,6 +33,20 @@ exports.App_DBConn_Status = async (ctx, next) => {
             DBInfo.message = '运行环境==>' + process.env.NODE_ENV
             DBInfo.database = '数据库名称==>' + DBConn.database
             DBInfo.host = '主机名称==>' + DBConn.host
+            DBInfo.type = '主机名称==>' +Sequelize.getDialect() 
+
+            Sequelize.query('SELECT sum(change_point) as pointcount from insun_ucenter_point where user_id=:user_id and source=:source', {
+                replacements : {
+                    user_id : '0046ae5d-4ab6-d0d8-b4eb-4fe39bf2765a', //按:后的标识名传入其替换成的值
+                    source:1
+                },
+                 type: Sequelize.QueryTypes.SELECT }).then(function (results) {
+                console.log(results)
+              })
+
+
+
+
             ctx.status = 200
             return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, '已成功建立连接。', DBInfo)
         })
@@ -473,11 +487,11 @@ exports.App_Point_Add = async (ctx, next) => {
                 //模块创建一个积分
                 let newPoint = await DBConn.Points.create(queryInfo)
                 ctx.status = 200
-                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `积分添加成功！`, newPoint);
+                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `积分添加操作成功！`, newPoint);
             } catch (err) {
                 //数据保存错误
                 ctx.status = 500
-                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据保存错误,操作失败!', err.toString());
+                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '积分添加操作失败!', err.toString());
             }
         }
     } catch (e) {
@@ -500,27 +514,29 @@ exports.App_Point_count = async (ctx, next) => {
         //获得参数进行有效性判断
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
             ctx.status = 400
-            return
+            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
         } else {
             try {
-                //模块创建一个积分
-                let newPointCount = await DBConn.Point.find(queryInfo)
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `积分添加成功！`, newPointCount);
+                //模块统计一个积分
+                let newPointCount = await DBConn.Points.findAll(
+                    {attributes: [[Sequelize.fn('COUNT', Sequelize.col('change_point')), 'sum_point']]},{
+                    where: {
+                        user_id: queryInfo.user_id
+                    }
+                })
                 ctx.status = 200
-                return true
+                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `成功！`, newPointCount);
+
             } catch (err) {
                 //数据保存错误
-                ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据保存错误,操作失败!', err.toString());
                 ctx.status = 500
-                return
+                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据操作失败!', err.toString());
             }
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson('访问应用数据错误！', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = Insun.ReturnUnit.returnErrorJson('访问应用数据错误！', e.toString())
     }
 }
 
