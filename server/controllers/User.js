@@ -65,7 +65,7 @@ exports.App_User_Login = async (ctx, next) => {
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '用户登录信息提供不全', queryInfo)
             return false
         };
-        let result = await DBConn.User.findOne({ where: { loginname: queryInfo.loginname } })
+        let result = await DBConn.Users.findOne({ where: { loginname: queryInfo.loginname } })
         if (!result) {
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '系统无此用户', queryInfo)
             ctx.status = 400
@@ -84,7 +84,7 @@ exports.App_User_Login = async (ctx, next) => {
                 //console.log('显示=>Token：' + tmpToken);
                 var prams = { 'push_token': tmpToken };
                 //更新
-                DBConn.User.update(prams, { 'where': { 'uuid': result.uuid } })
+                DBConn.Users.update(prams, { 'where': { 'uuid': result.uuid } })
                 var rtnInfo = {}
                 rtnInfo.uuid = result.uuid
                 rtnInfo.token = tmpToken;
@@ -125,7 +125,7 @@ exports.App_User_OneInfo = async (ctx, next) => {
             ctx.status = 400
             return
         };
-        let result = await DBConn.User.findOne({ where: { loginname: queryInfo.mobile } })
+        let result = await DBConn.Users.findOne({ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
         if (!result) {
             //无记录
@@ -165,7 +165,7 @@ exports.App_User_Register = async (ctx, next) => {
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '手机、密码等参数不全,请重新输入!', queryInfo)
             return false
         };
-        let result = await DBConn.User.count({ where: { loginname: queryInfo.loginname } })
+        let result = await DBConn.Users.count({ where: { loginname: queryInfo.loginname } })
         // 返回数据库中是否有用该手机注册的用户
         if (result > 0) {
             //有记录
@@ -184,7 +184,7 @@ exports.App_User_Register = async (ctx, next) => {
             queryInfo.role_level = 0//普通用户
             try {
                 //模块创建一个用户
-                let newUser = await DBConn.User.create(queryInfo)
+                let newUser = await DBConn.Users.create(queryInfo)
                 ctx.body = InsunUnits.ReturnUnit.returnSuccessJson(200, `您已成功注册为【${Config.appinfo.app_name_zh}】用户！`, newUser);
             } catch (err) {
                 //数据保存错误
@@ -225,7 +225,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
             ctx.status = 400
             return false
         };
-        let result = await DBConn.User.findOne({ where: { uuid: queryInfo.uuid } })
+        let result = await DBConn.Users.findOne({ where: { uuid: queryInfo.uuid } })
         if (!result) {
             ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '系统无此用户', queryInfo)
             ctx.status = 400
@@ -320,7 +320,7 @@ exports.App_User_SelfInfo = async (ctx, next) => {
             ctx.status = 400
             return
         } else {
-            let result = await DBConn.User.findOne({ 'where': { uuid: queryInfo.uuid } })
+            let result = await DBConn.Users.findOne({ 'where': { uuid: queryInfo.uuid } })
             if (!result) {
                 ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '未找到该用户，请重新查找', {})
                 ctx.status = 400
@@ -361,7 +361,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
             ctx.status = 400
             return
         } else {
-            let result = await DBConn.User.findOne({ where: { uuid: queryInfo.uuid } })
+            let result = await DBConn.Users.findOne({ where: { uuid: queryInfo.uuid } })
             if (!result) {
                 ctx.body = InsunUnits.ReturnUnit.returnInfoJson(400, '未找到该用户，无法设置状态', queryInfo)
                 ctx.status = 400
@@ -373,7 +373,7 @@ exports.App_User_SetStatus = async (ctx, next) => {
                 }
                 var prams = { 'status': status };
                 //更新
-                DBConn.User.update(prams, { 'where': { 'uuid': result.uuid } })
+                DBConn.Users.update(prams, { 'where': { 'uuid': result.uuid } })
                 ctx.body = InsunUnits.ReturnUnit.returnSuccessJson(200, '设置用户状态成功');
                 ctx.status = 200
                 return true
@@ -419,7 +419,7 @@ exports.App_User_ResetPasswordForAdmin = async (ctx, next) => {
                 tmppassword = InsunUnits.EncryptUnit.Encryptaes192(Config.security.resetpassword, Config.security.secret)
                 let prams = { 'password': tmppassword };
                 //更新
-                DBConn.User.update(prams, { 'where': { 'uuid': queryInfo.uuid } })
+                DBConn.Users.update(prams, { 'where': { 'uuid': queryInfo.uuid } })
                 ctx.body = InsunUnits.ReturnUnit.returnSuccessJson(200, '重置用户密码成功');
                 ctx.status = 200
                 return true
