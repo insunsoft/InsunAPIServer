@@ -466,27 +466,23 @@ exports.App_Point_Add = async (ctx, next) => {
         //获得参数进行有效性判断
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id || !queryInfo.source || !queryInfo.refer_number || !queryInfo.change_point) {
-            ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
             ctx.status = 400
-            return
+            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
         } else {
             try {
                 //模块创建一个积分
-                let newPoint = await DBConn.Point.create(queryInfo)
-                ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `积分添加成功！`, newPoint);
+                let newPoint = await DBConn.Points.create(queryInfo)
                 ctx.status = 200
-                return true
+                return ctx.body = Insun.ReturnUnit.returnSuccessJson(200, `积分添加成功！`, newPoint);
             } catch (err) {
                 //数据保存错误
-                ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据保存错误,操作失败!', err.toString());
                 ctx.status = 500
-                return
+                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '数据保存错误,操作失败!', err.toString());
             }
         }
     } catch (e) {
-        ctx.body = Insun.ReturnUnit.returnErrorJson('访问应用数据错误！', e.toString())
         ctx.status = 500
-        return
+        return ctx.body = Insun.ReturnUnit.returnErrorJson('访问应用数据错误！', e.toString())
     }
 }
 
