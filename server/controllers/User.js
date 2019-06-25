@@ -531,7 +531,6 @@ exports.App_Point_count = async (ctx, next) => {
             })
                 ctx.status = 200
                 ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, `成功！`,userpointcount);
-
         }
     } catch (e) {
         ctx.status = 500
