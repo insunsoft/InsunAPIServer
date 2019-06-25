@@ -1,28 +1,30 @@
 /* jshint indent: 2 */
-//群组表
-module.exports = function (sequelize, DataTypes) {
-  const Groups = sequelize.define('Groups', {
+//余额钱包记录
+module.exports = function(sequelize, DataTypes) {
+  const Balances=  sequelize.define('Balances', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    groupname: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
-      comment: '群组名称'
+    user_id: {
+      type: DataTypes.STRING(128),
+      allowNull: false
     },
-    group_id: {
-      type: DataTypes.STRING(128).UNSIGNED,
+    source: {
+      type: DataTypes.INTEGER(1),
       allowNull: false,
-      comment: 'UUID-唯一编码'
+      defaultValue: '1'
     },
-    order: {
+    source_sn: {
       type: DataTypes.INTEGER(11).UNSIGNED,
+      allowNull: false
+    },
+    amount: {
+      type: DataTypes.DECIMAL,
       allowNull: false,
-      defaultValue: '10',
-      comment: '排序字段'
+      defaultValue: '0.00'
     },
     created_at: {
       type: DataTypes.DATE,
@@ -36,17 +38,16 @@ module.exports = function (sequelize, DataTypes) {
     },
     status: {
       type: DataTypes.INTEGER(1).UNSIGNED,
-      allowNull: false,
-      defaultValue: '1',
-      comment: '状态(0-失效 1-正常)'
+      allowNull: true,
+      defaultValue: '1'
     }
   }, {
-      freezeTableName: true,
-      timestamps: false,
-      tableName: 'insun_ucenter_group'
-    });
+    freezeTableName: true,
+    timestamps: false,
+    tableName: 'insun_ucenter_balance'
+  });
 
-  Groups.associate = function (models) {
+  Balances.associate = function (models) {
     // associations can be defined here
     /* users.belongsTo(models.carts,{
       foreignKey: 'user_id'
@@ -69,10 +70,6 @@ module.exports = function (sequelize, DataTypes) {
   };
 
 
-  return Groups;
-
-
-
-
-
+  return Balances;
+  
 };

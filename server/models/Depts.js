@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+//单位表
 module.exports = function (sequelize, DataTypes) {
   const Depts = sequelize.define('Depts', {
     id: {

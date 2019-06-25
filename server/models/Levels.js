@@ -1,28 +1,27 @@
 /* jshint indent: 2 */
-//群组表
-module.exports = function (sequelize, DataTypes) {
-  const Groups = sequelize.define('Groups', {
+
+module.exports = function(sequelize, DataTypes) {
+  const Levels = sequelize.define('Levels', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    groupname: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
-      comment: '群组名称'
+    levelname: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      unique: true
     },
-    group_id: {
-      type: DataTypes.STRING(128).UNSIGNED,
-      allowNull: false,
-      comment: 'UUID-唯一编码'
-    },
-    order: {
+    min_point: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
-      defaultValue: '10',
-      comment: '排序字段'
+      defaultValue: '0'
+    },
+    max_point: {
+      type: DataTypes.INTEGER(11).UNSIGNED,
+      allowNull: false,
+      defaultValue: '0'
     },
     created_at: {
       type: DataTypes.DATE,
@@ -37,16 +36,14 @@ module.exports = function (sequelize, DataTypes) {
     status: {
       type: DataTypes.INTEGER(1).UNSIGNED,
       allowNull: false,
-      defaultValue: '1',
-      comment: '状态(0-失效 1-正常)'
+      defaultValue: '1'
     }
   }, {
-      freezeTableName: true,
-      timestamps: false,
-      tableName: 'insun_ucenter_group'
-    });
-
-  Groups.associate = function (models) {
+    freezeTableName: true,
+    timestamps: false,
+    tableName: 'insun_ucenter_level'
+  });
+  Levels.associate = function (models) {
     // associations can be defined here
     /* users.belongsTo(models.carts,{
       foreignKey: 'user_id'
@@ -69,10 +66,6 @@ module.exports = function (sequelize, DataTypes) {
   };
 
 
-  return Groups;
-
-
-
-
-
+  return Levels;
+  
 };

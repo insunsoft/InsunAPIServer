@@ -1,28 +1,20 @@
 /* jshint indent: 2 */
-//群组表
-module.exports = function (sequelize, DataTypes) {
-  const Groups = sequelize.define('Groups', {
+//朋友表
+module.exports = function(sequelize, DataTypes) {
+  const Friends =  sequelize.define('Friends', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    groupname: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
-      comment: '群组名称'
-    },
-    group_id: {
-      type: DataTypes.STRING(128).UNSIGNED,
-      allowNull: false,
-      comment: 'UUID-唯一编码'
-    },
-    order: {
+    user_id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
-      allowNull: false,
-      defaultValue: '10',
-      comment: '排序字段'
+      allowNull: false
+    },
+    friend_id: {
+      type: DataTypes.INTEGER(11).UNSIGNED,
+      allowNull: false
     },
     created_at: {
       type: DataTypes.DATE,
@@ -37,16 +29,15 @@ module.exports = function (sequelize, DataTypes) {
     status: {
       type: DataTypes.INTEGER(1).UNSIGNED,
       allowNull: false,
-      defaultValue: '1',
-      comment: '状态(0-失效 1-正常)'
+      defaultValue: '1'
     }
   }, {
-      freezeTableName: true,
-      timestamps: false,
-      tableName: 'insun_ucenter_group'
-    });
+    freezeTableName: true,
+    timestamps: false,
+    tableName: 'insun_ucenter_friend'
+  });
 
-  Groups.associate = function (models) {
+  Friends.associate = function (models) {
     // associations can be defined here
     /* users.belongsTo(models.carts,{
       foreignKey: 'user_id'
@@ -69,10 +60,7 @@ module.exports = function (sequelize, DataTypes) {
   };
 
 
-  return Groups;
+  return Friends;
 
-
-
-
-
+  
 };
