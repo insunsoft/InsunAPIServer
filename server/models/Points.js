@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     user_id: {
-      type: DataTypes.STRING(128).UNSIGNED,
+      type: DataTypes.STRING(128),
       allowNull: false,
       comment: '外键，关联user表的UUID'
     },

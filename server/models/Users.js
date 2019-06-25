@@ -165,9 +165,9 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'insun_ucenter_user'
     });
   Users.associate = function (models) {
-    users.hasMany(models.Points, {
+   /*  users.hasMany(models.Points, {
       foreignKey: 'user_id'
-    })
+    }) */
     // associations can be defined here
     /* users.belongsTo(models.carts,{
       foreignKey: 'user_id'

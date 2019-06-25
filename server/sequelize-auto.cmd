@@ -1,1 +1,1 @@
-sequelize-auto -h 127.0.0.1 -d insunapiserver_development -u root -x 168168 -p 3306 -t insun_ucenter_address
+sequelize-auto -h 127.0.0.1 -d insunapiserver_development -u root -x 168168 -p 3306 -t insun_ucenter_message

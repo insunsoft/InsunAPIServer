@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
       comment: '群组名称'
     },
     group_id: {
-      type: DataTypes.STRING(128).UNSIGNED,
+      type: DataTypes.STRING(128),
       allowNull: false,
       comment: 'UUID-唯一编码'
     },
