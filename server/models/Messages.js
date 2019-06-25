@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
-
+//用户消息表
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('insun_ucenter_message', {
+  const Messages = sequelize.define('Messages', {
     id: {
       type: DataTypes.INTEGER(11).UNSIGNED,
       allowNull: false,
@@ -40,6 +40,34 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '1'
     }
   }, {
+    freezeTableName: true,
+    timestamps: false,
     tableName: 'insun_ucenter_message'
   });
+  Messages.associate = function (models) {
+    // associations can be defined here
+    /* users.belongsTo(models.carts,{
+      foreignKey: 'user_id'
+    }) */
+
+    /*  users.hasMany(models.address, {
+       foreignKey: 'user_id'
+     })
+     users.hasMany(models.orders, {
+       foreignKey: 'user_id'
+     })
+     users.belongsToMany(models.goods, {
+       // as:'',
+       foreignKey: 'user_id',
+       through: {
+         model: models.carts
+       }
+     }) */
+
+  };
+
+
+  return Messages;
+
+  
 };

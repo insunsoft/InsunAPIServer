@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+//用户层级表
 module.exports = function(sequelize, DataTypes) {
   const Levels = sequelize.define('Levels', {
     id: {
