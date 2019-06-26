@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "home": "/pages/home/index",
+    "news": "/pages/news/index",
+    "publish": "/pages/publish/index",
+    "platform": "/pages/platform/index",
+    "about": "/pages/about/index"
+  }
+}
