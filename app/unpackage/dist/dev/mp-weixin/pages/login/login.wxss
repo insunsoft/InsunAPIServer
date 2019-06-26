@@ -1,58 +1,59 @@
 
-.InsunUI-box{
-	padding: 0 100rpx;
-	position: relative;
+.InsunUI-box {
+  padding: 0 100rpx;
+  position: relative;
 }
-.InsunUI-logo{
-	width: 100%;
-	width: 100%;
-	height: 290rpx;
+.InsunUI-logo {
+  width: 100%;
+  width: 100%;
+  height: 290rpx;
 }
-.InsunUI-title{
-	position: absolute;
-	top: 0;
-	line-height: 360rpx;
-	font-size: 68rpx;
-	color: #fff;
-	text-align: center;
-	width: 100%;
-	margin-left: -100rpx;
+.InsunUI-title {
+  position: absolute;
+  top: 0;
+  line-height: 360rpx;
+  font-size: 68rpx;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  margin-left: -100rpx;
 }
-.InsunUI-form{
-	margin-top: 120rpx;
+.InsunUI-form {
+  margin-top: 120rpx;
 }
-.InsunUI-input{
-	background: #F5FFFA;
-	margin-top: 30rpx;
-	-webkit-border-radius: 100rpx;
-	        border-radius: 100rpx;
-	padding: 20rpx 40rpx;
-	font-size: 36rpx;
+.InsunUI-input {
+  background: #f5fffa;
+  margin-top: 30rpx;
+  -webkit-border-radius: 100rpx;
+          border-radius: 100rpx;
+  padding: 20rpx 40rpx;
+  font-size: 36rpx;
 }
-.input-placeholder, .InsunUI-input{
-	color: #94afce;
+.input-placeholder,
+.InsunUI-input {
+  color: #94afce;
 }
-.InsunUI-label{
-	padding: 60rpx 0;
-	text-align: center;
-	font-size: 30rpx;
-	color: #a7b6d0;
+.InsunUI-label {
+  padding: 60rpx 0;
+  text-align: center;
+  font-size: 30rpx;
+  color: #a7b6d0;
 }
-.InsunUI-btn{
-	background: #39b54a;
-	color: #fff;
-	border: 0;
-	-webkit-border-radius: 100rpx;
-	        border-radius: 100rpx;
-	font-size: 36rpx;
+.InsunUI-btn {
+  background: #39b54a;
+  color: #fff;
+  border: 0;
+  -webkit-border-radius: 100rpx;
+          border-radius: 100rpx;
+  font-size: 36rpx;
 }
-.InsunUI-btn:after{
-	border: 0;
+.InsunUI-btn:after {
+  border: 0;
 }
 /*按钮点击效果*/
-.InsunUI-btn.button-hover{
-	-webkit-transform: translate(1rpx, 1rpx);
-	    -ms-transform: translate(1rpx, 1rpx);
-	        transform: translate(1rpx, 1rpx);
+.InsunUI-btn.button-hover {
+  -webkit-transform: translate(1rpx, 1rpx);
+      -ms-transform: translate(1rpx, 1rpx);
+          transform: translate(1rpx, 1rpx);
 }
 

@@ -91,21 +91,14 @@ export default {
         url: "./register"
       });
 	},
-	go_login(){
+	async go_login(){
+		 
 				this.loading = true
-                this.$insunapi.userlogin({loginname: this.loginname,password:this.password}).then((res)=>{
+               let res = await this. $insunapi.userlogin({loginname: this.loginname,password:this.password});
+						
                     this.loading = false;
                     console.log('request success', res)
-                    uni.showToast({
-                        title: '请求成功',
-                        icon: 'success',
-                        mask: true
-                    });
-                    this.res = '请求结果 : ' + JSON.stringify(res);
-                }).catch((err)=>{
-                    this.loading = false;
-                    console.log('request fail', err);
-                })
+                   
 
 	},
 	loginnameInput(e) {
