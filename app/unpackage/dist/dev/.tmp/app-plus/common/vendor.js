@@ -8244,7 +8244,7 @@ _interface.default.config.baseUrl = "http://localhost:8080/api/";
 //将业务所有接口统一起来便于维护，如果项目很大可以将 url 独立成文件，接口分成不同的模块
 //具体的业务请求
 var userlogin = function userlogin(data) {
-  _interface.default.post('APP.User.Login', {
+  return _interface.default.post('APP.User.Login', {
     method: 'Post',
     dataType: 'json',
     data: data }).then(function (res) {

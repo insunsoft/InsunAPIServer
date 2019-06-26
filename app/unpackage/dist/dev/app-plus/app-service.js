@@ -1448,7 +1448,7 @@ __wxAppCode__['pages/home/index.wxml']=$gwx('./pages/home/index.wxml');
 __wxAppCode__['pages/index/index.json']={"usingComponents":{"home":"/pages/home/index","news":"/pages/news/index","publish":"/pages/publish/index","platform":"/pages/platform/index","about":"/pages/about/index"}};
 __wxAppCode__['pages/index/index.wxml']=$gwx('./pages/index/index.wxml');
 
-__wxAppCode__['pages/login/login.json']={"usingComponents":{"cu-custom":"/colorui/components/cu-custom"}};
+__wxAppCode__['pages/login/login.json']={"usingComponents":{}};
 __wxAppCode__['pages/login/login.wxml']=$gwx('./pages/login/login.wxml');
 
 __wxAppCode__['pages/login/register.json']={"navigationBarTitleText":"登录","usingComponents":{"cu-custom":"/colorui/components/cu-custom"}};
@@ -11317,7 +11317,7 @@ _interface.default.config.baseUrl = "http://localhost:8080/api/";
 //将业务所有接口统一起来便于维护，如果项目很大可以将 url 独立成文件，接口分成不同的模块
 //具体的业务请求
 var userlogin = function userlogin(data) {
-  _interface.default.post('APP.User.Login', {
+  return _interface.default.post('APP.User.Login', {
     method: 'Post',
     dataType: 'json',
     data: data }).then(function (res) {
