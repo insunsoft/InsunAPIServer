@@ -23,7 +23,7 @@ Vue.component('platform',platform)
 Vue.component('about',about)
 //增加全局属性
 Vue.prototype.$store = store
-Vue.prototype.$api = api
+Vue.prototype.$insunapi = api
 //有了Vue.config.productionTip = false这句代码，它会阻止你显示显示生产模式的消息
 Vue.config.productionTip = false
 
