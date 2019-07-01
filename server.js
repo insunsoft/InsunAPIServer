@@ -10,13 +10,18 @@
 // +----------------------------------------------------------------------
 
 //+----------------------Koa2核心库-----------------------------------------
-const Koa = require('koa')//web开发框架Koa2核心库加载
-const app = new Koa()//获得Koa2实例
+const Koa2 = require('koa')//web开发框架Koa2核心库加载
+const app = new Koa2()//获得Koa2实例
+const env = process.env.NODE_ENV || 'development' // Current mode
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载NodeJS-Koa2框架核心库...`)
+
+
+const path = require('path')// 用于处理目录路径
+//const ip = require('ip')//ip
 // +----------------------常用中间件---------------------------------------
 const json = require('koa-json')//
+const KoaBody = require('koa-body')//处理与post相关的请求
 const bodyparser = require('koa-bodyparser')//处理与post相关的请求
-const path = require('path')// 用于处理目录路径
 const koa_Static = require('koa-static')//静态文件
 //const views = require('koa-views')//
 const koa_onerror = require('koa-onerror')//错误处理
@@ -45,6 +50,23 @@ app.use(koa_Static( path.join(__dirname , './public') ));
 //   extension: 'ejs'
 // })) 
 // logger
+
+//请求设置--------------------------------------------------
+app.use((ctx, next) => {
+    if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
+        ctx.set('Access-Control-Allow-Origin', '*');
+    } else {
+        ctx.set('Access-Control-Allow-Origin', config.API_server_host);
+    }
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    ctx.set('Access-Control-Allow-Credentials', true); // 允许带上 cookie
+    return next();
+})
+
+
+
+
 //访问权限控制--------------------------------------------------
 app.use(async(ctx, next)=> {
     var dataString = ctx.headers.authorization;
@@ -85,12 +107,22 @@ app.use(koa_jwt({
 	path: ['/api/','/api/App.User.Login','/api/App.User.Register','/api/App.DBConn.Status','/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
 }));
 
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`服务器端【模式：${ctx.method}】路径- ${ctx.url} 用时- ${ms}ms`)
-})
+app.use(KoaBody({
+    multipart: true,
+    parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE'], // parse GET, HEAD, DELETE requests
+    formidable: {
+      uploadDir: path.join(__dirname, '../assets/uploads/tmp')
+    },
+    jsonLimit: '10mb',
+    formLimit: '10mb',
+    textLimit: '10mb'
+  })) // Processing request
+
+
+
+
+
+
 
 // +----------------------路由配置----------------------------------------
 app.use(index.routes(), index.allowedMethods())
@@ -101,6 +133,13 @@ console.error(`服务器端【${process.env.NODE_ENV}】==>路由配置完毕。
 app.on('error', (err, ctx) => {
   console.error('服务器端错误==>', err, ctx)
 });
+
+app.use(async (ctx, next) => {
+    const start = new Date()
+    await next()
+    const ms = new Date() - start
+    console.log(`服务器端【模式：${ctx.method}】路径- ${ctx.url} 用时- ${ms}ms`)
+  })
 // +--------------------------开启端口侦听-----------------------------------
 const type = process.env.HOST || config.server.API_server_type
 const host = process.env.HOST || config.server.API_server_host

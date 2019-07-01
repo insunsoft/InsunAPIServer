@@ -16,9 +16,9 @@ const config = require('../config')//配置文件加载
 const basename = path.basename(module.filename);
 const DBConn = {};
 
-let sequelize = new Sequelize(config.database.DATABASE, config.database.USERNAME, config.database.PASSWORD, {
-  host: config.database.HOST,
-  port: config.database.PORT,
+let sequelize = new Sequelize(config.MySQLDB.DATABASE, config.MySQLDB.USERNAME, config.MySQLDB.PASSWORD, {
+  host: config.MySQLDB.HOST,
+  port: config.MySQLDB.PORT,
   dialect: config.server.db_type,
   dialectOptions: {
     charset: "utf8mb4",
@@ -57,11 +57,11 @@ Object.keys(DBConn).forEach((modelName) => {
 DBConn.sequelize = sequelize;
 DBConn.Sequelize = Sequelize;
 //这个地方疯狂挂载属性。===========
-DBConn.database = config.database.DATABASE;
-DBConn.username = config.database.USERNAME;
-DBConn.password = config.database.PASSWORD;
-DBConn.host = config.database.HOST;
-DBConn.port = config.database.PORT;
+DBConn.database = config. MySQLDB.DATABASE;
+DBConn.username = config. MySQLDB.USERNAME;
+DBConn.password = config. MySQLDB.PASSWORD;
+DBConn.host = config. MySQLDB.HOST;
+DBConn.port = config. MySQLDB.PORT;
 DBConn.dbtype = config.server.db_type;
 
 module.exports = DBConn;
