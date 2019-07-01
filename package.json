@@ -1,6 +1,6 @@
 {
   "name": "insunapiserver",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "main": "./server.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "说明": "在Mac和Linux上使用export， 在windows上export要换成set"
   },
   "dependencies": {
-    "koa": "^2.2.0",
+    "koa": "^2.7.0",
     "koa-body": "^4.1.0",
     "koa-bodyparser": "^3.2.0",
     "koa-json": "^2.0.2",

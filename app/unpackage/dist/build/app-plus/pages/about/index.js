@@ -1,2 +1,0 @@
-setCssToHead([".",[1],"page { height: 100vh; }\n",],undefined,{path:"./pages/about/index.wxss"})();
-document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/about/index.wxml') } }));
