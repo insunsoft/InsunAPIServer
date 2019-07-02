@@ -28,6 +28,9 @@ const koa_onerror = require('koa-onerror')//错误处理
 const koa_logger = require('koa-logger')//日志
 const koa_jwt = require('koa-jwt')//令牌权限
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载常用中间件完毕。`)
+// +----------------------自定义中间件加载------------------------------------
+const ErrorRoutesCatch = require( './server/middleware/ErrorRoutesCatch')
+const AuthHeader= require( './server/middleware/AuthHeader')
 // +----------------------配置文件加载------------------------------------
 const config = require('./server/config')//配置文件加载
 console.error(`服务器端【${process.env.NODE_ENV}】==>加载配置文件完毕`)
@@ -68,39 +71,9 @@ app.use((ctx, next) => {
 
 
 //访问权限控制--------------------------------------------------
-app.use(async(ctx, next)=> {
-    var dataString = ctx.headers.authorization;
-   // console.log(dataString)
-    if(dataString == undefined){
-        await next();
-    }else{
-        const dataArr = dataString.split(' ');
-        const token = dataArr[1];
-     var data =  InsunUnits.TokenUnit.decodeToken(token)
-     if (data){
-        //这一步是为了把解析出来的用户信息存入全局state中，这样在其他任一中间价都可以获取到state中的值
-            ctx.state.user =data
-  
-         //   console.log(ctx.state.user)
-        }
-        await next();
-    }
-})
-//状态
-app.use(async(ctx, next)=>{
-    return next().catch((err) => {
-        if (401 == err.status) {
-          ctx.status = 401;
-            ctx.body = {
-                code:401,
-                msg:'登录令牌失效，请重新登录。'
-            }
-        } else {
-            throw err;
-        }
-    });
-});
+app.use(AuthHeader())
 
+app.use(ErrorRoutesCatch())
 app.use(koa_jwt({
 	secret:config.security.secret
 }).unless({
