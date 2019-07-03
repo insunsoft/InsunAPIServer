@@ -64,7 +64,7 @@ exports.SecurityInfo = {
 
 }
 
-
+//USER_: {code:'000001',msg:'成功'};
 
 
 
