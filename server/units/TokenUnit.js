@@ -53,5 +53,5 @@ exports.decodeToken= function (strToken) {
 
 
 exports.getAuthInfo = (token) => {
-  return jwt.verify(token.substr(7), TOKEN_CONFIG.KEY)
+  return JWT.verify(token.substr(7), TOKEN_CONFIG.KEY)
 }

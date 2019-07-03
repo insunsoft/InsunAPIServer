@@ -31,9 +31,8 @@ console.error(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
 const AuthHeader = require('./server/middleware/AuthHeader')
-const  CorsRequest = require('./server/middleware/CorsRequest')
 // +----------------------配置文件加载------------------------------------
-const {ServerInfo,MySQLInfo,SecurityInfo} = require('./server/config')//配置文件加载
+const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配置文件加载
 console.error(`服务器端【${env}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
 const InsunUnits = require('./server/units');
@@ -64,28 +63,31 @@ app.use(koa_Static(path.join(__dirname, './public')));
 // })) 
 // logger
 
-//跨域请求设置--------------------------------------------------
-app.use(CorsRequest)
+//请求设置--------------------------------------------------
+app.use((ctx, next) => {
+    if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
+        ctx.set('Access-Control-Allow-Origin', '*');
+    } else {
+        ctx.set('Access-Control-Allow-Origin', config.API_server_host);
+    }
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    ctx.set('Access-Control-Allow-Credentials', true); // 允许带上 cookie
+    return next();
+})
+
+//app.use(CorsRequest)
 //访问权限控制--------------------------------------------------
 app.use(AuthHeader())
-//app.use(ErrorRoutesCatch())
-
-app.use(function(ctx, next){
-    return next().catch((err) => {
-        if (401 == err.status) {
-            ctx.status = 401;
-            ctx.body = 'Protected resource, use Authorization header to get access\n';
-        } else {
-            throw err;
-        }
-    });
-});
-
+//错误信息处理--------------------------------------------------
+app.use(ErrorRoutesCatch())
+//权限例外
 app.use(koa_jwt({
     secret: SecurityInfo.secret
 }).unless({
     path: ['/api/', '/api/App.User.Login', '/api/App.User.Register', '/api/App.DBConn.Status', '/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
 }));
+
 
 app.use(KoaBody({
     multipart: true,
