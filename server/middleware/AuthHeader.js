@@ -17,11 +17,11 @@ module.exports = function () {
       }
 
     }
- /*    else{
+   else{
       console.log('没有token===>')
       ctx.status = 200;
       await next()
-    } */
+    } 
   }
 }
 

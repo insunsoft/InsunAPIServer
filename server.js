@@ -87,7 +87,7 @@ console.log('daole===>')
 app.use(koa_jwt({
     secret: SecurityInfo.secret
 }).unless({
-    path: ['/', '/api/App.User.Login', '/api/App.User.Register', '/api/App.DBConn.Status', '/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
+    path: ['/api/App.User.Login', '/api/App.User.Register'] //除了这些地址，其他的URL都需要验证
 }));
 
 

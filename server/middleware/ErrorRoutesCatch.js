@@ -22,7 +22,7 @@ module.exports = function () {
           }
           break;
         default:
-          throw err
+        //throw err
       }
     })
   }
