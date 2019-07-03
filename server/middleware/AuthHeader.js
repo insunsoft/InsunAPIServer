@@ -2,7 +2,7 @@ const InsunUnits = require('../units');
 module.exports = function () {
     return function (ctx, next) {
         var dataString = ctx.headers.authorization;
-        // console.log(dataString)
+         console.log(dataString)
          if(dataString == undefined){
               next();
          }else{

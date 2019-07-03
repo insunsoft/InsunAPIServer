@@ -11,26 +11,26 @@
     "说明": "在Mac和Linux上使用export， 在windows上export要换成set"
   },
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
-    "koa-bodyparser": "^3.2.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",
-    "jsonwebtoken": "^8.5.1",
+    "koa-jwt": "^3.5.1",
+    "koa-logger": "^3.2.0",
+    "koa-onerror": "^4.1.0",
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
     "koa-views": "^6.2.0",
-    "koa-jwt": "^3.5.1",
-    "koa-onerror": "^4.1.0",
-    "koa-logger": "^3.2.0",
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.8.7"
+    "sequelize": "^5.9.1"
   },
   "devDependencies": {
-    "nodemon": "^1.8.1",
     "bcryptjs": "^2.4.3",
     "debug": "^2.6.3",
     "hashids": "^1.2.2",
-    "sequelize-cli": "^5.4.0"
+    "nodemon": "^1.8.1",
+    "sequelize-cli": "^5.5.0"
   }
 }
