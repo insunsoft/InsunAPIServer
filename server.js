@@ -65,27 +65,29 @@ app.use(koa_Static(path.join(__dirname, './public')));
 
 //请求设置--------------------------------------------------
 app.use((ctx, next) => {
+    console.log('设置跨域请求===>')
     if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
         ctx.set('Access-Control-Allow-Origin', '*');
     } else {
         ctx.set('Access-Control-Allow-Origin', config.API_server_host);
     }
-    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     ctx.set('Access-Control-Allow-Credentials', true); // 允许带上 cookie
     return next();
 })
 
-//app.use(CorsRequest)
+//app.use(CorsRequest), Authorization
 //访问权限控制--------------------------------------------------
 app.use(AuthHeader())
 //错误信息处理--------------------------------------------------
 app.use(ErrorRoutesCatch())
 //权限例外
+console.log('daole===>')
 app.use(koa_jwt({
     secret: SecurityInfo.secret
 }).unless({
-    path: ['/api/', '/api/App.User.Login', '/api/App.User.Register', '/api/App.DBConn.Status', '/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
+    path: ['/', '/api/App.User.Login', '/api/App.User.Register', '/api/App.DBConn.Status', '/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
 }));
 
 
