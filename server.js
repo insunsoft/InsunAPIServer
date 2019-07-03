@@ -32,7 +32,7 @@ console.error(`服务器端【${env}】==>加载常用中间件完毕。`)
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
 const AuthHeader = require('./server/middleware/AuthHeader')
 // +----------------------配置文件加载------------------------------------
-const config = require('./server/config')//配置文件加载
+const {ServerInfo,MySQLInfo,SecurityInfo} = require('./server/config')//配置文件加载
 console.error(`服务器端【${env}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
 const InsunUnits = require('./server/units');
@@ -95,7 +95,7 @@ app.use(function(ctx, next){
 });
 
 app.use(koa_jwt({
-    secret: config.security.secret
+    secret: SecurityInfo.secret
 }).unless({
     path: ['/api/', '/api/App.User.Login', '/api/App.User.Register', '/api/App.DBConn.Status', '/api/App.User.Token'] //除了这些地址，其他的URL都需要验证
 }));
@@ -138,9 +138,9 @@ app.on('error', (err, ctx) => {
 
 
 // +--------------------------开启端口侦听-----------------------------------
-const type = process.env.HOST || config.server.API_server_type
-const host = process.env.HOST || config.server.API_server_host
-const port = process.env.PORT || config.server.API_server_port
+const type = process.env.HOST || ServerInfo.API_server_type
+const host = process.env.HOST || ServerInfo.API_server_host
+const port = process.env.PORT || ServerInfo.API_server_port
 app.listen(port, host)
 // +----------------------------------------------------------------------
 console.log(`服务器端【${env}】==>运行于${port}端口...`)

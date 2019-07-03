@@ -10,9 +10,9 @@
 // | 备注：已完成 
 // +----------------------------------------------------------------------
 const crypto = require('crypto');
-const Config = require('../config')//配置文件加载
+const {SecurityInfo} = require('../config')//配置文件加载
 const TOKEN_CONFIG = {
-	KEY: Config.security.secret
+	KEY: SecurityInfo.secret
 };
 
 module.exports = {

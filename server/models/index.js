@@ -12,21 +12,22 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const config = require('../config')//配置文件加载
+const {ServerInfo,MySQLInfo} = require('../config')//配置文件加载
 const basename = path.basename(module.filename);
 const DBConn = {};
 
-let sequelize = new Sequelize(config.MySQLDB.DATABASE, config.MySQLDB.USERNAME, config.MySQLDB.PASSWORD, {
-  host: config.MySQLDB.HOST,
-  port: config.MySQLDB.PORT,
-  dialect: config.server.db_type,
+let sequelize = new Sequelize(MySQLInfo.DATABASE, MySQLInfo.USERNAME, MySQLInfo.PASSWORD, {
+  host: MySQLInfo.HOST,
+  port: MySQLInfo.PORT,
+  dialect: ServerInfo.DBType,
   dialectOptions: {
     charset: "utf8mb4",
+    collate: 'utf8mb4_unicode_ci',
     supportBigNumbers: true,
     bigNumberStrings: true
   },
   pool: {
-    max: 5,
+    max: 50,
     min: 0,
     acquire: 30000,
     idle: 10000
@@ -57,12 +58,12 @@ Object.keys(DBConn).forEach((modelName) => {
 DBConn.sequelize = sequelize;
 DBConn.Sequelize = Sequelize;
 //这个地方疯狂挂载属性。===========
-DBConn.database = config. MySQLDB.DATABASE;
-DBConn.username = config. MySQLDB.USERNAME;
-DBConn.password = config. MySQLDB.PASSWORD;
-DBConn.host = config. MySQLDB.HOST;
-DBConn.port = config. MySQLDB.PORT;
-DBConn.dbtype = config.server.db_type;
+DBConn.database = MySQLInfo.DATABASE;
+DBConn.username = MySQLInfo.USERNAME;
+DBConn.password = MySQLInfo.PASSWORD;
+DBConn.host = MySQLInfo.HOST;
+DBConn.port = MySQLInfo.PORT;
+DBConn.dbtype = ServerInfo.DBType;
 
 module.exports = DBConn;
 

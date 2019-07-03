@@ -10,11 +10,11 @@
 // | 备注：已完成 
 // +----------------------------------------------------------------------
 const JWT = require('jsonwebtoken');
-const config = require('../config')//配置文件加载
+const {SecurityInfo} = require('../config')//配置文件加载
 const TOKEN_CONFIG = {
-  KEY: config.security.secret,
-  expires: config.security.expires,
-  alg: config.security.alg,
+  KEY: SecurityInfo.secret,
+  expires: SecurityInfo.expires,
+  alg: SecurityInfo.alg,
 };
 
 module.exports = {

@@ -21,7 +21,7 @@
 var development_env = require('./developmentConfig.js');
 var test_env = require('./testConfig.js');
 var production_env=require('./productionConfig.js');
-console.log(`服务器端【${process.env.NODE_ENV}】==>正在加载config文件...测试读取应用名称：${development_env.appinfo.app_name_zh}` );
+console.log(`服务器端【${process.env.NODE_ENV}】==>正在加载config文件...测试读取应用名称：${development_env.AppInfo.app_name_zh}` );
 //根据不同的NODE_ENV，输出不同的配置对象，默认输出development的配置对象
 module.exports = {
     development: development_env,
