@@ -31,6 +31,7 @@ console.error(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
 const AuthHeader = require('./server/middleware/AuthHeader')
+const  CorsRequest = require('./server/middleware/CorsRequest')
 // +----------------------配置文件加载------------------------------------
 const {ServerInfo,MySQLInfo,SecurityInfo} = require('./server/config')//配置文件加载
 console.error(`服务器端【${env}】==>加载配置文件完毕`)
@@ -63,24 +64,10 @@ app.use(koa_Static(path.join(__dirname, './public')));
 // })) 
 // logger
 
-//请求设置--------------------------------------------------
-app.use((ctx, next) => {
-    if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
-        ctx.set('Access-Control-Allow-Origin', '*');
-    } else {
-        ctx.set('Access-Control-Allow-Origin', config.API_server_host);
-    }
-    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    ctx.set('Access-Control-Allow-Credentials', true); // 允许带上 cookie
-    return next();
-})
-
-
-
-
+//跨域请求设置--------------------------------------------------
+app.use(CorsRequest)
 //访问权限控制--------------------------------------------------
-//app.use(AuthHeader())
+app.use(AuthHeader())
 //app.use(ErrorRoutesCatch())
 
 app.use(function(ctx, next){
@@ -127,13 +114,6 @@ app.on('error', (err, ctx) => {
     console.error('服务器端错误==>', err, ctx)
 });
 
-/* app.use(async (ctx, next) => {
-    const start = new Date()
-    await next()
-    const ms = new Date() - start
-    console.log(`服务器端【模式：${ctx.method}】路径- ${ctx.url} 用时- ${ms}ms`)
-})
- */
 
 
 

@@ -17,32 +17,29 @@ const TOKEN_CONFIG = {
   alg: SecurityInfo.alg,
 };
 
-module.exports = {
+//module.exports = {
 /**
  * 根据用户传递的数据生成 token 
  * @param {Object} - 用户数据
  * @returns {string} - 加密字符创即生成的token
  */
-generateToken:function (data) {
+exports.generateToken=function (data) {
  // console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
 //  console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
  // console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
   const token =   JWT.sign(data, TOKEN_CONFIG.KEY, { expiresIn: TOKEN_CONFIG.expires, algorithm: TOKEN_CONFIG.alg });
  // console.log('显示=>原始数据：' + JSON.stringify(data) + 'token:' + token);
   return token;
-},
+}
 
 /**
  * 解码给定的有效负载（payload）通常是来自请求头的授权字段
  * @param {string} - token
  * @returns {object|null} - 对象或者空
  */
-decodeToken :function (strToken) {
+exports.decodeToken= function (strToken) {
   try {
-  //  console.log('generateToken:=>secret:=>' + TOKEN_CONFIG.KEY);
-  //  console.log('generateToken:=>expires:=>' + TOKEN_CONFIG.expires);
-  //  console.log('generateToken:=>alg:=>' + TOKEN_CONFIG.alg);
-   // console.log('generateToken:=>strToken:=>' + strToken);
+
     
     let payload =  JWT.verify(strToken, TOKEN_CONFIG.KEY);
   //  console.log('显示=>原始数据：[' + JSON.stringify(payload) + ']token:' + strToken);
@@ -53,4 +50,8 @@ decodeToken :function (strToken) {
   }
 
 }
+
+
+exports.getAuthInfo = (token) => {
+  return jwt.verify(token.substr(7), TOKEN_CONFIG.KEY)
 }
