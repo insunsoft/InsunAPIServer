@@ -11,13 +11,13 @@
 module.exports = function () {
   return function (ctx, next) {
     return next().catch((err) => {
-      console.log('asdfsddsadsd===>' + String(err))
+     // console.log('asdfsddsadsd===>' + String(err))
       switch (err.status) {
         case 401:
           ctx.status = 200
           ctx.body = {
             code: 401,
-            msg: '访问令牌验证错误-' + err.message + '-' + err.originalError.message,
+            msg: '访问令牌验证错误-' + err.message ,
             data: {}
           }
           break;

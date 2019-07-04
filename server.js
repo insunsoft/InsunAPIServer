@@ -35,6 +35,7 @@ const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配�
 console.error(`服务器端【${env}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
 const InsunUnits = require('./server/units');
+const { logger, accessLogger} = require('./server/units/LogUnit');
 const index = require('./server/routes')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
 console.error(`服务器端【${env}】==>加载路由文件完毕。`)
@@ -42,6 +43,7 @@ console.error(`服务器端【${env}】==>加载路由文件完毕。`)
 // +-----------------------中间件使用--------------------------------------
 // 错误处理
 KoaOnerror(app)
+app.use(accessLogger());
 // 查询字符串解析到`ctx.request.query`
 app.use(KoaBodyparser())
 app.use(Json())
@@ -62,7 +64,7 @@ app.use(KoaStatic(path.join(__dirname, './public')));
 
 //请求设置--------------------------------------------------
 app.use((ctx, next) => {
-    console.log('设置跨域请求===>')
+   // console.log('设置跨域请求===>')
     if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
         ctx.set('Access-Control-Allow-Origin', '*');
     } else {
@@ -80,7 +82,7 @@ app.use((ctx, next) => {
 //错误信息处理--------------------------------------------------
 app.use(ErrorRoutesCatch())
 //权限例外
-console.log('daole===>')
+//console.log('daole===>')
 app.use(KoaJwt({
     secret: SecurityInfo.secret
 }).unless({
@@ -101,18 +103,19 @@ app.use(KoaBody({
 
 
 
-
+ 
 
 
 
 // +----------------------路由配置----------------------------------------
 app.use(index.routes(), index.allowedMethods())
 app.use(api.routes(), api.allowedMethods())
-console.error(`服务器端【${env}】==>路由配置完毕。`)
+console.log(`服务器端【${env}】==>路由配置完毕。`)
 // +----------------------------------------------------------------------
 // error-handling
 app.on('error', (err, ctx) => {
     console.error('服务器端错误==>', err, ctx)
+    logger.error(err);
 });
 
 
