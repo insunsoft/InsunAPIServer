@@ -19,18 +19,17 @@ console.error(`服务器端【${process.env.NODE_ENV}】==>加载NodeJS-Koa2框�
 const path = require('path')// 用于处理目录路径
 //const ip = require('ip')//ip
 // +----------------------常用中间件---------------------------------------
-const json = require('koa-json')//返回Json格式化，主要是换行处理
+const Json = require('koa-json')//返回Json格式化，主要是换行处理
 const KoaBody = require('koa-body')//查询字符串解析到`ctx.request.query`
-const bodyparser = require('koa-bodyparser')//查询字符串解析到`ctx.request.query`
-const koa_Static = require('koa-static')//静态文件
+const KoaBodyparser = require('koa-bodyparser')//查询字符串解析到`ctx.request.query`
+const KoaStatic = require('koa-static')//静态文件
 //const views = require('koa-views')//
-const koa_onerror = require('koa-onerror')//错误处理
-const koa_logger = require('koa-logger')//控制台显示访问类型、路径、耗时
-const koa_jwt = require('koa-jwt')//令牌权限
+const KoaOnerror = require('koa-onerror')//错误处理
+const koaLogger = require('koa-logger')//控制台显示访问类型、路径、耗时
+const KoaJwt = require('koa-jwt')//令牌权限
 console.error(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
-const AuthHeader = require('./server/middleware/AuthHeader')
 // +----------------------配置文件加载------------------------------------
 const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配置文件加载
 console.error(`服务器端【${env}】==>加载配置文件完毕`)
@@ -42,20 +41,18 @@ console.error(`服务器端【${env}】==>加载路由文件完毕。`)
 
 // +-----------------------中间件使用--------------------------------------
 // 错误处理
-koa_onerror(app)
-//========================================================================
+KoaOnerror(app)
 // 查询字符串解析到`ctx.request.query`
-app.use(bodyparser())
-
-app.use(json())
+app.use(KoaBodyparser())
+app.use(Json())
 //========================================================================
-app.use(koa_logger())
+app.use(koaLogger())
 //控制台显示如下
 // <-- POST /api/App.User.Register?password=123456&loginname=15027675251
 // --> POST /api/App.User.Register?password=123456&loginname=15027675251 404 29ms -
 //==========================================================================
 // 静态资源处理，配置路径
-app.use(koa_Static(path.join(__dirname, './public')));
+app.use(KoaStatic(path.join(__dirname, './public')));
 //========================================================================
 //模板设置
 // app.use(views(__dirname + '/views', {
@@ -79,12 +76,12 @@ app.use((ctx, next) => {
 
 //app.use(CorsRequest), Authorization
 //访问权限控制--------------------------------------------------
-app.use(AuthHeader())
+//app.use(AuthHeader())
 //错误信息处理--------------------------------------------------
 app.use(ErrorRoutesCatch())
 //权限例外
 console.log('daole===>')
-app.use(koa_jwt({
+app.use(KoaJwt({
     secret: SecurityInfo.secret
 }).unless({
     path: ['/api/App.User.Login', '/api/App.User.Register'] //除了这些地址，其他的URL都需要验证
