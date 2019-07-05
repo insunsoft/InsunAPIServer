@@ -27,6 +27,8 @@ const KoaStatic = require('koa-static')//静态文件
 //const KoaOnerror = require('koa-onerror')//错误处理
 const koaLogger = require('koa-logger')//控制台显示访问类型、路径、耗时
 const KoaJwt = require('koa-jwt')//令牌权限
+const errorHandler=require('koa-better-error-handler')//错误处理
+const koa404Handler=require('koa-404-handler')//404错误处理
 console.log(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
@@ -41,8 +43,11 @@ const api = require('./server/routes/api')
 console.log(`服务器端【${env}】==>加载路由文件完毕。`)
 
 // +-----------------------中间件使用--------------------------------------
-
-
+// 错误处理
+app.context.onerror = errorHandler;
+app.context.api = true;
+// use koa-404-handler
+app.use(koa404Handler);
 //KoaOnerror(app)
 app.use(accessLogger());
 // 查询字符串解析到`ctx.request.query`
@@ -50,7 +55,7 @@ app.use(KoaBodyparser())
 app.use(Json())
 
 // 错误处理
-app.use(ErrorRoutesCatch())
+//app.use(ErrorRoutesCatch())
 //========================================================================
 app.use(koaLogger())
 //控制台显示如下
@@ -90,7 +95,7 @@ app.use((ctx, next) => {
 app.use(KoaJwt({
     secret: SecurityInfo.secret
 }).unless({
-    path: ['/api/App.User.Login', '/api/App.User.Register'] //除了这些地址，其他的URL都需要验证
+    path: ['/api/','/api/App.User.Login', '/api/App.User.Register'] //除了这些地址，其他的URL都需要验证
 }));
 
 
@@ -118,16 +123,10 @@ console.log(`服务器端【${env}】==>路由配置完毕。`)
 // +----------------------------------------------------------------------
 // error-handling
  app.on('error', (err, ctx) => {
-   // console.error('服务器端错误==>', err, ctx)
-    //logger.error(err);
+    console.error('服务器端错误==>', err, ctx)
+    logger.error(err);
 
-    ctx.response.status = err.statusCode || err.status || 500
-    ctx.response.body = {
-      code: 404,
-      msg: '无法找到指定位置的资源-Not Found' + err.message,
-      data: {}
-    }
-    console.log('404===>' + String(err))
+
 }); 
 
 

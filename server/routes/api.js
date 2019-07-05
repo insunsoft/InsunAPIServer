@@ -20,8 +20,18 @@ router.prefix('/api')
 // Hello Wolrd示例接口
 // 接口链接：http://localhost:3000/api/
 // 功能说明： 用于第一次接口接入，验证签名
-router.get('/', function (ctx, next) {
-    ctx.body = 'Hello Wolrd!,您已成功访问InsunAPIServer！'
+
+// throw an error anywhere you want!
+router.get('/404', ctx => ctx.throw(404));
+router.get('/500', ctx => ctx.throw(500));
+
+
+router.all('/', function (ctx, next) {
+    ctx.body = {
+        code:200,
+        message:'Hello Wolrd!,您已成功访问InsunAPIServer！',
+        data:{}
+    }
 })
 //获取数据库连接状态
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
@@ -60,12 +70,6 @@ router.post('/App.User.SetStatusForAdmin',User.App_User_SetStatusForAdmin);
 
 router.post('/App.Point.count',User.App_Point_count); 
 
-// //判断用户是否登陆
-// router.post('/App.User.Check',User.App_User_Check); 
-
-
-// router.post('/App.User.Token',User.App_User_Token);
-// router.get('/App.User.Token',User.App_User_Token);
 
 
 module.exports = router
