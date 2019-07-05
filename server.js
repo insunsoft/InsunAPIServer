@@ -13,40 +13,44 @@
 const Koa2 = require('koa')//web开发框架Koa2核心库加载
 const app = new Koa2()//获得Koa2实例
 const env = process.env.NODE_ENV || 'development' // Current mode
-console.error(`服务器端【${process.env.NODE_ENV}】==>加载NodeJS-Koa2框架核心库...`)
+console.log(`服务器端【${process.env.NODE_ENV}】==>加载NodeJS-Koa2框架核心库...`)
 // +----------------------内置中间件---------------------------------------
 
 const path = require('path')// 用于处理目录路径
-//const ip = require('ip')//ip
+
 // +----------------------常用中间件---------------------------------------
 const Json = require('koa-json')//返回Json格式化，主要是换行处理
 const KoaBody = require('koa-body')//查询字符串解析到`ctx.request.query`
 const KoaBodyparser = require('koa-bodyparser')//查询字符串解析到`ctx.request.query`
 const KoaStatic = require('koa-static')//静态文件
 //const views = require('koa-views')//
-const KoaOnerror = require('koa-onerror')//错误处理
+//const KoaOnerror = require('koa-onerror')//错误处理
 const koaLogger = require('koa-logger')//控制台显示访问类型、路径、耗时
 const KoaJwt = require('koa-jwt')//令牌权限
-console.error(`服务器端【${env}】==>加载常用中间件完毕。`)
+console.log(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
 const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
 // +----------------------配置文件加载------------------------------------
 const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配置文件加载
-console.error(`服务器端【${env}】==>加载配置文件完毕`)
+console.log(`服务器端【${env}】==>加载配置文件完毕`)
 // +----------------------路由文件加载------------------------------------
 const InsunUnits = require('./server/units');
 const { logger, accessLogger} = require('./server/units/LogUnit');
 const index = require('./server/routes')//用于默认测试网站根目录。
 const api = require('./server/routes/api')
-console.error(`服务器端【${env}】==>加载路由文件完毕。`)
+console.log(`服务器端【${env}】==>加载路由文件完毕。`)
 
 // +-----------------------中间件使用--------------------------------------
-// 错误处理
-KoaOnerror(app)
+
+
+//KoaOnerror(app)
 app.use(accessLogger());
 // 查询字符串解析到`ctx.request.query`
 app.use(KoaBodyparser())
 app.use(Json())
+
+// 错误处理
+app.use(ErrorRoutesCatch())
 //========================================================================
 app.use(koaLogger())
 //控制台显示如下
@@ -80,7 +84,7 @@ app.use((ctx, next) => {
 //访问权限控制--------------------------------------------------
 //app.use(AuthHeader())
 //错误信息处理--------------------------------------------------
-app.use(ErrorRoutesCatch())
+
 //权限例外
 //console.log('daole===>')
 app.use(KoaJwt({
@@ -113,11 +117,18 @@ app.use(api.routes(), api.allowedMethods())
 console.log(`服务器端【${env}】==>路由配置完毕。`)
 // +----------------------------------------------------------------------
 // error-handling
-app.on('error', (err, ctx) => {
-    console.error('服务器端错误==>', err, ctx)
-    logger.error(err);
-});
+ app.on('error', (err, ctx) => {
+   // console.error('服务器端错误==>', err, ctx)
+    //logger.error(err);
 
+    ctx.response.status = err.statusCode || err.status || 500
+    ctx.response.body = {
+      code: 404,
+      msg: '无法找到指定位置的资源-Not Found' + err.message,
+      data: {}
+    }
+    console.log('404===>' + String(err))
+}); 
 
 
 
