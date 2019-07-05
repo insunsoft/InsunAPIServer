@@ -7,7 +7,7 @@
 // +----------------------------------------------------------------------
 // | 用途: crypto中间件aes192加解密方式的封装
 // | 路径: ./units/EncryptUnit.js
-// | 备注：已完成 
+// | 备注：已完成 100%
 // +----------------------------------------------------------------------
 const crypto = require('crypto');
 const {SecurityInfo} = require('../config')//配置文件加载
@@ -16,13 +16,14 @@ const TOKEN_CONFIG = {
 };
 
 module.exports = {
+	//加密
 	Encryptaes192: function (data) {
 		const cipher = crypto.createCipher('aes192', TOKEN_CONFIG.KEY);
 		var crypted = cipher.update(data, 'utf8', 'hex');
 		crypted += cipher.final('hex');
 		return crypted;
 	},
-
+	//解密
 	Decryptaes192: function (encrypted) {
 		const decipher = crypto.createDecipher('aes192', TOKEN_CONFIG.KEY);
 		var decrypted = decipher.update(encrypted, 'hex', 'utf8');
