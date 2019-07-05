@@ -7,21 +7,21 @@
 // +----------------------------------------------------------------------
 // | 用途: API调用返回数据方法的封装
 // | 路径: ./units/ReturnUnit.js
-// | 备注：已完成 
+// | 备注：已完成 100%
 // +----------------------------------------------------------------------
 module.exports = {    //成功模式
     returnSuccessJson: function (code, msg, data) {
         return {
-            statusCode: code,
-            msg: msg,
+            statusCode: code||200,
+            message: msg,
             data: data
         };
     },
     //服务器端出现错误
     returnErrorJson: function (code, msg, data) {
         return {
-            statusCode: code,
-            msg: msg,
+            statusCode: code||500,
+            message: msg,
             data: data
         };
     },
@@ -29,7 +29,7 @@ module.exports = {    //成功模式
     returnInfoJson: function (code, msg, data) {
         return {
             statusCode: code||'400',
-            msg: msg,
+            message: msg,
             data: data
         };
     }
