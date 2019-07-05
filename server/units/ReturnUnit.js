@@ -12,7 +12,7 @@
 module.exports = {    //成功模式
     returnSuccessJson: function (code, msg, data) {
         return {
-            code: code,
+            statusCode: code,
             msg: msg,
             data: data
         };
@@ -20,7 +20,7 @@ module.exports = {    //成功模式
     //服务器端出现错误
     returnErrorJson: function (code, msg, data) {
         return {
-            code: code,
+            statusCode: code,
             msg: msg,
             data: data
         };
@@ -28,7 +28,7 @@ module.exports = {    //成功模式
     //客户交互模式出现错误、提示
     returnInfoJson: function (code, msg, data) {
         return {
-            code: code||'400',
+            statusCode: code||'400',
             msg: msg,
             data: data
         };

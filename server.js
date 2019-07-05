@@ -24,14 +24,13 @@ const KoaBody = require('koa-body')//查询字符串解析到`ctx.request.query`
 const KoaBodyparser = require('koa-bodyparser')//查询字符串解析到`ctx.request.query`
 const KoaStatic = require('koa-static')//静态文件
 //const views = require('koa-views')//
-//const KoaOnerror = require('koa-onerror')//错误处理
 const koaLogger = require('koa-logger')//控制台显示访问类型、路径、耗时
 const KoaJwt = require('koa-jwt')//令牌权限
 const errorHandler=require('koa-better-error-handler')//错误处理
 const koa404Handler=require('koa-404-handler')//404错误处理
+const cors = require('koa2-cors');//CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。
 console.log(`服务器端【${env}】==>加载常用中间件完毕。`)
 // +----------------------自定义中间件加载------------------------------------
-const ErrorRoutesCatch = require('./server/middleware/ErrorRoutesCatch')
 // +----------------------配置文件加载------------------------------------
 const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配置文件加载
 console.log(`服务器端【${env}】==>加载配置文件完毕`)
@@ -48,20 +47,13 @@ app.context.onerror = errorHandler;
 app.context.api = true;
 // use koa-404-handler
 app.use(koa404Handler);
-//KoaOnerror(app)
+app.use(cors())
+app.use(koaLogger())
 app.use(accessLogger());
 // 查询字符串解析到`ctx.request.query`
 app.use(KoaBodyparser())
 app.use(Json())
 
-// 错误处理
-//app.use(ErrorRoutesCatch())
-//========================================================================
-app.use(koaLogger())
-//控制台显示如下
-// <-- POST /api/App.User.Register?password=123456&loginname=15027675251
-// --> POST /api/App.User.Register?password=123456&loginname=15027675251 404 29ms -
-//==========================================================================
 // 静态资源处理，配置路径
 app.use(KoaStatic(path.join(__dirname, './public')));
 //========================================================================
@@ -71,27 +63,8 @@ app.use(KoaStatic(path.join(__dirname, './public')));
 // })) 
 // logger
 
-//请求设置--------------------------------------------------
-app.use((ctx, next) => {
-   // console.log('设置跨域请求===>')
-    if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
-        ctx.set('Access-Control-Allow-Origin', '*');
-    } else {
-        ctx.set('Access-Control-Allow-Origin', config.API_server_host);
-    }
-    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    ctx.set('Access-Control-Allow-Credentials', true); // 允许带上 cookie
-    return next();
-})
-
-//app.use(CorsRequest), Authorization
-//访问权限控制--------------------------------------------------
-//app.use(AuthHeader())
-//错误信息处理--------------------------------------------------
 
 //权限例外
-//console.log('daole===>')
 app.use(KoaJwt({
     secret: SecurityInfo.secret
 }).unless({

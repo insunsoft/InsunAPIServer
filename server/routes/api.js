@@ -15,7 +15,7 @@
 const router = require('koa-router')()
 const User = require('../controllers/User')
 const Article = require('../controllers/Article')
-
+const Insun = require('../units');
 router.prefix('/api')
 // Hello Wolrd示例接口
 // 接口链接：http://localhost:3000/api/
@@ -27,11 +27,8 @@ router.get('/500', ctx => ctx.throw(500));
 
 
 router.all('/', function (ctx, next) {
-    ctx.body = {
-        code:200,
-        message:'Hello Wolrd!,您已成功访问InsunAPIServer！',
-        data:{}
-    }
+    ctx.body = Insun.ReturnUnit.returnInfoJson (200,'Hello Wolrd!,您已成功访问InsunAPIServer！',{})
+ 
 })
 //获取数据库连接状态
 router.post('/App.DBConn.Status',User.App_DBConn_Status);
