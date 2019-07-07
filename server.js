@@ -30,7 +30,9 @@ const errorHandler=require('koa-better-error-handler')//错误处理
 const koa404Handler=require('koa-404-handler')//404错误处理
 const cors = require('koa2-cors');//CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。
 console.log(`服务器端【${env}】==>加载常用中间件完毕。`)
-// +----------------------自定义中间件加载------------------------------------
+// +----------------------自定义中间件加载--------------------------------
+
+
 // +----------------------配置文件加载------------------------------------
 const { ServerInfo, MySQLInfo, SecurityInfo } = require('./server/config')//配置文件加载
 console.log(`服务器端【${env}】==>加载配置文件完毕`)

@@ -27,7 +27,7 @@ router.get('/500', ctx => ctx.throw(500));
 
 
 router.all('/', function (ctx, next) {
-    ctx.body = Insun.ReturnUnit.returnInfoJson (200,'Hello Wolrd!,您已成功访问InsunAPIServer！',{})
+    ctx.body = Insun.ReturnUnit.returnErrorJson (200,'Hello Wolrd!,您已成功访问InsunAPIServer！',{})
  
 })
 //获取数据库连接状态

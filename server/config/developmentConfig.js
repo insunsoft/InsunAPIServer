@@ -60,8 +60,6 @@ exports.SecurityInfo = {
     secret: '1234567890',//jwt token秘钥 加密的秘钥 公用一个 发布时应采用随机字母数字的组合
     expires: 3600000,//有效时间
     alg: 'HS256', //加密方式
-
-
 }
 
 
