@@ -76,7 +76,7 @@ exports.App_User_Login = async (ctx, next) => {
         //console.log('显示=>客户端传递参数:'+ JSON.stringify( queryInfo))
         if (!queryInfo.loginname || !queryInfo.password) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-参数提供不全！', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '用户登录-参数提供不全！', queryInfo)
         } else {
 
             let DBresult = await DBConn.Users.findOne({
@@ -89,7 +89,7 @@ exports.App_User_Login = async (ctx, next) => {
 
             if (!DBresult) {
                 ctx.status = 400
-                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-该手机号未注册！', queryInfo)
+                return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '用户登录-该手机号未注册！', queryInfo)
             } else {
                 let OldDBPassword = await Insun.EncryptUnit.Decryptaes192(DBresult.password)
                 //console.log('显示=>服务端加密密码:' + DBresult.password);
@@ -117,7 +117,7 @@ exports.App_User_Login = async (ctx, next) => {
                     return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '用户登录-成功！', rtnInfo);
                 } else {
                     ctx.status = 400// console.log('判断=>不等于');
-                    return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户登录-密码输入错误！', queryInfo)
+                    return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '用户登录-密码输入错误！', queryInfo)
                 }
             }
         }
@@ -143,14 +143,14 @@ exports.App_User_ByMobile = async (ctx, next) => {
         let queryInfo = ctx.request.query
         if (!queryInfo.mobile) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
         };
         let DBresult = await DBConn.Users.findOne({ where: { loginname: queryInfo.mobile } })
         // 返回数据库中是否有用该手机注册的用户
         if (!DBresult) {
             //无记录
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
         } else {
             ctx.status = 200
             return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, 'App_User_ByMobile-成功。', DBresult)
@@ -177,14 +177,14 @@ exports.App_User_ByUUID = async (ctx, next) => {
         let queryInfo = ctx.request.query
         if (!queryInfo.UUID) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_ByMobile-参数提供不全!', queryInfo)
         };
         let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.UUID } })
         // 返回数据库中是否有用该手机注册的用户
         if (!DBresult) {
             //无记录
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_ByMobile-未找到该用户信息。', queryInfo)
         } else {
             ctx.status = 200
             return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, 'App_User_ByMobile-成功。', DBresult)
@@ -215,14 +215,14 @@ exports.App_User_Register = async (ctx, next) => {
         //获得传入参数
         if (!queryInfo.loginname || !queryInfo.password) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_Register-参数提供不全!', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_Register-参数提供不全!', queryInfo)
         };
         let result = await DBConn.Users.count({ where: { loginname: queryInfo.loginname } })
         // 返回数据库中是否有用该手机注册的用户
         if (result > 0) {
             //有记录
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, 'App_User_Register-该手机号码已经被注册。请更换后重新注册。', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, 'App_User_Register-该手机号码已经被注册。请更换后重新注册。', queryInfo)
 
         } else {
             //没有记录
@@ -272,12 +272,12 @@ exports.App_User_AlterPassword = async (ctx, next) => {
         //获得传入参数token以及新旧密码
         if (!queryInfo.old_password || !queryInfo.new_password) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '参数提供不全!', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '参数提供不全!', queryInfo)
         };
         let result = await DBConn.Users.findOne({ where: { user_id: ctx.state.user.user_id } })
         if (!result) {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '系统无此用户', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '系统无此用户', queryInfo)
         } else {
             //将原数据库密码解密
             let OldDBPassword = await Insun.EncryptUnit.Decryptaes192(result.password)
@@ -291,7 +291,7 @@ exports.App_User_AlterPassword = async (ctx, next) => {
                 return ctx.body = await Insun.ReturnUnit.returnSuccessJson(200, '更新密码成功', {});
             } else {
                 ctx.status = 400
-                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '密码比对错误，请重新输入', {});
+                return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '密码比对错误，请重新输入', {});
             }
         }
     } catch (e) {
@@ -313,7 +313,7 @@ exports.App_User_Logout = async (ctx, next) => {
         let result = await DBConn.Users.findOne({ where: { user_id: ctx.state.user.user_id } })
         // console.log('显示=>返回用户结果：' + JSON.stringify(result));
         if (!result) {
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '用户未注册')
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '用户未注册')
             // console.log('查询=>没有记录');
         } else {
             var pram = { 'push_token': null };
@@ -348,13 +348,13 @@ exports.App_User_SelfInfo = async (ctx, next) => {
         //console.log(queryInfo)
         if (!queryInfo.user_id) {
             ctx.status = 400
-            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
+            return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '获取参数错误，访问失败', {})
 
         } else {
             let result = await DBConn.Users.findOne({ 'where': { user_id: queryInfo.user_id } })
             if (!result) {
                 ctx.status = 400
-                return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，请重新查找', {})
+                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '未找到该用户，请重新查找', {})
 
             } else {
                 ctx.status = 200
@@ -391,14 +391,14 @@ exports.App_User_SetStatusForAdmin = async (ctx, next) => {
             //如果是管理员
             if (!queryInfo.user_id) {
                 ctx.status = 400
-                return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '获取参数错误，访问失败', {})
+                return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '获取参数错误，访问失败', {})
 
             } else {
 
                 let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.user_id } })
                 if (!DBresult) {
                     ctx.status = 400
-                    return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法设置状态', queryInfo)
+                    return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '未找到该用户，无法设置状态', queryInfo)
                 } else {
                     if (queryInfo.status != 0 || queryInfo.status != 1) {
                         //默认设为失效
@@ -439,14 +439,14 @@ exports.App_User_ResetPasswordForAdmin = async (ctx, next) => {
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id) {
             ctx.status = 400
-            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全,操作失败', queryInfo)
+            return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '参数提供不全,操作失败', queryInfo)
         };
         if (RoleLevel == 3) {
             //如果是管理员
             let DBresult = await DBConn.Users.findOne({ where: { user_id: queryInfo.user_id } })
             if (!DBresult) {
                 ctx.status = 400
-                return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '未找到该用户，无法重置密码', queryInfo)
+                return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '未找到该用户，无法重置密码', queryInfo)
             } else {
                 tmppassword = await Insun.EncryptUnit.Encryptaes192(Config.security.resetpassword, Config.security.secret)
                 let prams = { 'password': tmppassword };
@@ -457,7 +457,7 @@ exports.App_User_ResetPasswordForAdmin = async (ctx, next) => {
             }
         } else {
             ctx.status = 400
-            return ctx.body = await Insun.ReturnUnit.returnInfoJson(400, '非管理员权限', queryInfo)
+            return ctx.body = await Insun.ReturnUnit.returnErrorJson(400, '非管理员权限', queryInfo)
         }
     } catch (e) {
         ctx.status = 500
@@ -482,7 +482,7 @@ exports.App_Point_Add = async (ctx, next) => {
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id || !queryInfo.source || !queryInfo.refer_number || !queryInfo.change_point) {
             ctx.status = 400
-            return ctx.body = Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
+            return ctx.body = Insun.ReturnUnit.returnErrorJson(400, '参数提供不全！', queryInfo)
         } else {
             try {
                 //模块创建一个积分
@@ -516,7 +516,7 @@ exports.App_Point_count = async (ctx, next) => {
         let queryInfo = ctx.request.query
         if (!queryInfo.user_id) {
             ctx.status = 400
-            return ctx.body =await Insun.ReturnUnit.returnInfoJson(400, '参数提供不全！', queryInfo)
+            return ctx.body =await Insun.ReturnUnit.returnErrorJson(400, '参数提供不全！', queryInfo)
         } else {
             await  Sequelize.query('SELECT user_id,sum(change_point) as pointcount from insun_ucenter_point where user_id=:user_id ', {
                 replacements: {

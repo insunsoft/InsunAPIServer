@@ -53,7 +53,6 @@ app.use(accessLogger());
 // 查询字符串解析到`ctx.request.query`
 app.use(KoaBodyparser())
 app.use(Json())
-
 // 静态资源处理，配置路径
 app.use(KoaStatic(path.join(__dirname, './public')));
 //========================================================================
@@ -105,7 +104,7 @@ console.log(`服务器端【${env}】==>路由配置完毕。`)
 
 
 // +--------------------------开启端口侦听-----------------------------------
-const type = process.env.HOST || ServerInfo.API_server_type
+const type = process.env.TYPE || ServerInfo.API_server_type
 const host = process.env.HOST || ServerInfo.API_server_host
 const port = process.env.PORT || ServerInfo.API_server_port
 app.listen(port, host)
