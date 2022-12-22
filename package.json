@@ -15,7 +15,7 @@
     "production": "node dist/server.js"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "koa": "^2.7.0",
     "koa-404-handler": "0.0.2",
     "koa-better-error-handler": "^2.0.0",
